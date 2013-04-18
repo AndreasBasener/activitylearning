@@ -25,6 +25,7 @@ public class UbisenseReceiver extends AbstractDataReceiver{
 			UbisenseMockupData data = gson.fromJson(message.getText(), UbisenseMockupData.class);
 
 			UbisenseData ubidata = new UbisenseData(data.getTime(),data.getPosition());
+			
 //			System.out.println(ubidata.getPoint());
 			return ubidata;
 		} catch (JMSException e) {

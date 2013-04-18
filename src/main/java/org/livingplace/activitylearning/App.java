@@ -55,11 +55,12 @@ public class App {
 	private XYFrame graph;
 	
 	public static void main(String[] args) {
-		App app = new App();
-		app.createReceiver();
-		app.startReceiver();
+//		App app = new App();
+//		app.createReceiver();
+//		app.startReceiver();
 		
-		System.out.println("Fertig");
+		KDD kdd = new KDD("data\\csv_test001.csv");
+//		System.out.println("Fertig");
 	}
 	
 	public App()

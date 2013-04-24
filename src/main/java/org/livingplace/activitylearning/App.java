@@ -59,7 +59,7 @@ public class App {
 //		app.createReceiver();
 //		app.startReceiver();
 		
-		KDD kdd = new KDD("data\\csv_test001.csv");
+		KDD kdd = new KDD("data\\csv_supermega.csv");
 //		System.out.println("Fertig");
 	}
 	

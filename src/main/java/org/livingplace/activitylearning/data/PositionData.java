@@ -20,6 +20,24 @@ public class PositionData {
 		this.x = x;
 		this.y = y;
 	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if(o==this)
+			return true;
+		if(! (o instanceof PositionData))
+			return false;
+		
+		PositionData d = (PositionData) o;
+		
+		return 
+//				this.time == d.time &&
+				this.x == d.x &&
+				this.y == d.y;
+		
+	}
+	
 	/**
 	 * @return the time
 	 */

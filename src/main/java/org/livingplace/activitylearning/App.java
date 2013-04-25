@@ -7,6 +7,7 @@ import java.util.Random;
 import org.livingplace.activitylearning.cluster.Cluster;
 import org.livingplace.activitylearning.cluster.Kmeans;
 import org.livingplace.activitylearning.data.IData;
+import org.livingplace.activitylearning.data.PositionData;
 import org.livingplace.activitylearning.data.UbisenseData;
 import org.livingplace.activitylearning.event.EventList;
 import org.livingplace.activitylearning.gui.XYFrame;
@@ -59,7 +60,26 @@ public class App {
 //		app.createReceiver();
 //		app.startReceiver();
 		
+		List<PositionData> data = new ArrayList<PositionData>();
+		data.add(new PositionData(0,0,0));
+		data.add(new PositionData(1,1,1));
+		data.add(new PositionData(2,2,2));
+		data.add(new PositionData(0,0,0));
+		data.add(new PositionData(1,1,1));
+		data.add(new PositionData(3,3,3));
+		data.add(new PositionData(0,0,0));
+		data.add(new PositionData(1,1,1));
+		data.add(new PositionData(4,4,4));
+		data.add(new PositionData(0,0,0));
+		data.add(new PositionData(1,1,1));
+		data.add(new PositionData(5,5,5));
+		data.add(new PositionData(0,0,0));
+		data.add(new PositionData(1,1,1));
+		data.add(new PositionData(2,2,2));
+		
+		
 		KDD kdd = new KDD("data\\csv_supermega.csv");
+//		KDD kdd = new KDD(data);
 //		System.out.println("Fertig");
 	}
 	

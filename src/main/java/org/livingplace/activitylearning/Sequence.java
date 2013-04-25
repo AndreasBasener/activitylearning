@@ -10,7 +10,7 @@ public class Sequence {
 	private List<PositionData> sequence;
 	private int startIndex;
 	
-	private List<PositionData> parentList;
+	private List<PositionData> eventList;
 	
 	public Sequence()
 	{
@@ -21,7 +21,7 @@ public class Sequence {
 	{
 		this();
 		this.startIndex = startIndex;
-		this.parentList = source;
+		this.eventList = source;
 		addElement(data);
 	}
 	
@@ -29,8 +29,15 @@ public class Sequence {
 	{
 		this();
 		this.startIndex = startIndex;
-		this.parentList = source;
+		this.eventList = source;
 		addList(data);
+	}
+	public Sequence(Sequence sequence)
+	{
+		this();
+		this.sequence.addAll(sequence.getSequence());
+		this.startIndex = sequence.startIndex;
+		this.eventList = sequence.eventList;
 	}
 	
 	public void addElement(PositionData element)
@@ -72,11 +79,12 @@ public class Sequence {
 		}
 	}
 	
-	public void extend()
+	public boolean extend()
 	{
+		boolean extended = false;
 		if(startIndex > 0)
 		{
-			PositionData data = parentList.get(startIndex-1);
+			PositionData data = eventList.get(startIndex-1);
 			
 			List<PositionData> list = new ArrayList<PositionData>();
 			list.add(data);
@@ -84,13 +92,26 @@ public class Sequence {
 			
 			this.sequence = list;
 			this.startIndex -= 1;
+			extended = true;
 		}
-		if((startIndex + sequence.size()) < (parentList.size() - 1))
+		if((startIndex + sequence.size()) < eventList.size())
 		{
-			this.parentList.add(parentList.get(startIndex + sequence.size()));
+			this.sequence.add(eventList.get(startIndex + sequence.size()));
+			extended = true;
 		}
+		return extended;
 	}
 
+	public String toString()
+	{
+		String s = "Index: " + startIndex + " Sequence: ";
+		for(PositionData p : sequence)
+		{
+			s += p.getX() + "," + p.getY() + " ";
+		}
+		return s;
+	}
+	
 	/**
 	 * @return the sequence
 	 */
@@ -104,4 +125,5 @@ public class Sequence {
 	public void setSequence(List<PositionData> sequence) {
 		this.sequence = sequence;
 	}
+	
 }

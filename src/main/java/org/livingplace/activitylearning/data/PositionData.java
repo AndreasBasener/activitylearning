@@ -75,4 +75,9 @@ public class PositionData {
 		this.y = y;
 	}
 	
+	public static int getValueSize()
+	{
+		return 3;
+	}
+	
 }

@@ -33,6 +33,13 @@ public class KDD {
 		discoverPatterns();
 		
 	}
+	public KDD(List<PositionData> data)
+	{
+		this.positionList = data;
+		this.patternList = new ArrayList<Pattern>();
+		
+		discoverPatterns();
+	}
 	
 	private void discoverPatterns()
 	{
@@ -41,13 +48,15 @@ public class KDD {
 		
 		List<Pattern> childList;
 		List<Pattern> discoverdPattern = new ArrayList<Pattern>();
+		List<Pattern> initalPattern = new ArrayList<Pattern>();
+		
 		
 		// Initiale Pattern finden
 		for(PositionData d : positionList)
 		{
 			Sequence seq = new Sequence(d, index, positionList);
 			boolean containsSequence = false;
-			for(Pattern p: patternList)
+			for(Pattern p: initalPattern)
 			{
 				containsSequence = p.containsSequence(seq);
 				if(containsSequence)
@@ -58,9 +67,14 @@ public class KDD {
 			}
 			if(!containsSequence)
 			{
-				patternList.add(new Pattern(seq));
+				initalPattern.add(new Pattern(seq));
 			}
 			index++;
+		}
+		for(Pattern p: initalPattern)
+		{
+			if(p.getPatternCount() > 1)
+				patternList.add(p);
 		}
 		System.out.println(patternList.size() + " initiale Pattern gefunden");
 		
@@ -70,34 +84,58 @@ public class KDD {
 			p.evaluate(positionList.size());
 		}
 		
+//		Pattern pat = patternList.get(0);
+//		System.out.println(pat);
+//		boolean ext = pat.extend();
+//		pat.evaluate(positionList.size());
+//		System.out.println(pat);
+//		System.out.println(ext);
+		
 		List<Pattern> parentList = patternList;
 		while(!done)
 		{
 			childList = new ArrayList<Pattern>();
-			for (Pattern p : parentList)
+//			System.out.println("Parentpattern " + parentList.size());
+			
+			List<Pattern> extendedList = new ArrayList<Pattern>();
+			for(int i=0; i < parentList.size(); i++)
 			{
-				List<Pattern> extendedList = new ArrayList<Pattern>(parentList);
-//				for(Pattern ep : extendedList)
-				for(int i = 0; i < extendedList.size(); i++)
+				Pattern parentPattern = parentList.get(i);
+//				System.out.println(parentPattern);
+				Pattern ep = new Pattern(parentPattern);
+				boolean extended = ep.extend();
+				if(extended)
 				{
-					Pattern ep = extendedList.get(i);
-					ep.extend();
-					ep.evaluate(positionList.size());
-					
-					if ((ep.getSequenceList().size() == 1) || (ep.getValue() < p.getValue()))
-					{
-						extendedList.remove(p);
-					}
-					else
-					{
-						if(!childList.contains(ep))
-						{
-							childList.add(ep);
-						}
-					}
+					extendedList.add(ep);
 				}
-				discoverdPattern.add(p);
+				if(!discoverdPattern.contains(parentPattern))
+					discoverdPattern.add(parentPattern);
 			}
+			for(Pattern p: extendedList)
+			{
+				for(int i = 0; i < (positionList.size() - p.getSequence().getSequence().size() + 1); i++)
+				{
+					List<PositionData> slist = new ArrayList<PositionData>();
+					for(int j = 0; j < p.getSequence().getSequence().size();j++)
+					{
+						slist.add(positionList.get(i+j));
+					}
+					Sequence s = new Sequence(slist, i, positionList);
+					if(p.containsSequence(s))
+						p.increasePatternCount();
+				}
+			}
+			for(int i=0; i< extendedList.size(); i++)
+			{
+				Pattern p = extendedList.get(i);
+				p.evaluate(positionList.size());
+//				System.out.printlng("Muster: " + i + " " + p);
+				if(p.getPatternCount() > 1)
+				{
+					childList.add(p);
+				}
+			}
+			
 			if(childList.size() == 0)
 			{
 				done = true;
@@ -108,6 +146,10 @@ public class KDD {
 			}
 		}
 		System.out.println("Entdeckte Pattern: " + discoverdPattern.size());
+		for (Pattern p : discoverdPattern)
+		{
+			System.out.println(p);
+		}
 	}
 
 	private void parseFile()

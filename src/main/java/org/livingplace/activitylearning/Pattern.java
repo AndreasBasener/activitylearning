@@ -3,103 +3,152 @@ package org.livingplace.activitylearning;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.livingplace.activitylearning.data.PositionData;
+
 public class Pattern {
 
-	private List<Sequence> sequenceList;
+//	private List<Sequence> sequenceList;
+	private Sequence sequence;
 	
 	private double value;
 	private double meantime;
 	private double stddevtime;
 	
+	private int patternCount = 0;
+	
 	public Pattern()
 	{
-		this.sequenceList = new ArrayList<Sequence>();
+//		this.sequenceList = new ArrayList<Sequence>();
+		this.sequence = new Sequence();
 	}
 	
 	public Pattern(Sequence sequence)
 	{
 		this();
-		addSequence(sequence);
+		this.sequence = sequence;
+//		addSequence(sequence);
 		increasePatternCount();
 	}
-	
-	public void addSequence(Sequence sequence)
+	public Pattern(Pattern pattern)
 	{
-		this.sequenceList.add(sequence);
+//		this.sequenceList = pattern.sequenceList;
+		this.sequence = new Sequence(pattern.sequence);
+//		increasePatternCount();
+//		this.value = pattern.value;
+//		this.meantime = pattern.meantime;
+//		this.stddevtime = pattern.stddevtime;
+//		this.patternCount = pattern.patternCount;
+//		this.patternCount = 0;
 	}
+	
+//	public void addSequence(Sequence sequence)
+//	{
+//		this.sequenceList.add(sequence);
+//	}
 	
 	public void increasePatternCount()
 	{
-		
+		patternCount++;
 	}
 	
 	public boolean containsSequence(Sequence seq)
 	{
-		boolean bool = false;
-		for(Sequence s : sequenceList)
-		{
-			if (s.equals(seq))
-			{
-				bool = true;
-			}
-		}
-		
-		return bool;
+//		boolean bool = false;
+//		for(Sequence s : sequenceList)
+//		{
+//			if (s.equals(seq))
+//			{
+//				bool = true;
+//			}
+//		}
+//		
+//		return bool;
+
+		return sequence.equals(seq);
 	}
 	
 	public void evaluate(int eventCount)
 	{
 		double sum = 0, diff = 0;
 		int newsize = 0;
-		if(sequenceList.size() == 0)
+		if(sequence == null || sequence.getSequence().size() == 0)
 		{
 			this.value = 0;
 		}
-		else if (sequenceList.size() == 1)
+		else if (sequence.getSequence().size() == 1)
 		{
-			this.value = sequenceList.size() / eventCount;
+			this.value = (double) patternCount / (double) eventCount;
 		}
 		else
 		{
-			for(Sequence s : sequenceList)
+			for(PositionData p : sequence.getSequence())
 			{
-				sum += s.getSequence().get(0).getTime();
+				sum += p.getTime();
 			}
-			meantime = sum / sequenceList.size();
+			meantime = (double) sum / (double) sequence.getSequence().size();
 			
 			sum = 0;
-			for(Sequence s : sequenceList)
+			for(PositionData p : sequence.getSequence())
 			{
-				diff = s.getSequence().get(0).getTime() - this.meantime;
+				diff = p.getTime() - this.meantime;
 				sum += diff * diff;
 			}
-			stddevtime = Math.sqrt(sum / sequenceList.size());
+			stddevtime = Math.sqrt((double) sum / (double) sequence.getSequence().size());
 
 			newsize = eventCount -
-					  (sequenceList.get(0).getSequence().size() * sequenceList.size()) +
-					  sequenceList.size() +
-					  sequenceList.get(0).getSequence().size();
+					  (sequence.getSequence().size() * patternCount) +
+					  sequence.getSequence().size() +
+					  patternCount;
 			
 			if (newsize == 0)
 				this.value = 0;
 			else
-				this.value = eventCount / newsize;
+				this.value = (double) eventCount / (double) newsize;
 		}
+//		System.out.println("Value :" + value);
+	}
+	
+	public boolean extend()
+	{
+		return sequence.extend();
+	}
+	
+	public String toString()
+	{
+		String s = "Value: " + value + " Count: " + patternCount + " - " + sequence;
+		return s;
+	}
+	
+	public boolean equals(Object o)
+	{
+		if(o == this)
+			return true;
+		
+		if(!(o instanceof Pattern))
+			return false;
+		
+		Pattern p = (Pattern) o;
+		
+		return this.sequence.equals(p.sequence) &&
+				this.meantime == p.meantime &&
+				this.patternCount == p.patternCount &&
+				this.stddevtime == p.stddevtime &&
+				this.value == p.value;
 	}
 
-	/**
-	 * @return the sequenceList
-	 */
-	public List<Sequence> getSequenceList() {
-		return sequenceList;
-	}
-
-	/**
-	 * @param sequenceList the sequenceList to set
-	 */
-	public void setSequenceList(List<Sequence> sequenceList) {
-		this.sequenceList = sequenceList;
-	}
+//	/**
+//	 * @return the sequenceList
+//	 */
+//	public List<Sequence> getSequenceList() {
+//		return sequenceList;
+//	}
+//
+//	/**
+//	 * @param sequenceList the sequenceList to set
+//	 */
+//	public void setSequenceList(List<Sequence> sequenceList) {
+//		this.sequenceList = sequenceList;
+//	}
 
 	/**
 	 * @return the value
@@ -130,6 +179,34 @@ public class Pattern {
 	}
 
 	/**
+	 * @return the patternCount
+	 */
+	public int getPatternCount() {
+		return patternCount;
+	}
+
+	/**
+	 * @param patternCount the patternCount to set
+	 */
+	public void setPatternCount(int patternCount) {
+		this.patternCount = patternCount;
+	}
+
+	/**
+	 * @return the sequence
+	 */
+	public Sequence getSequence() {
+		return sequence;
+	}
+
+	/**
+	 * @param sequence the sequence to set
+	 */
+	public void setSequence(Sequence sequence) {
+		this.sequence = sequence;
+	}
+
+	/**
 	 * @return the stddevtime
 	 */
 	public double getStddevtime() {
@@ -143,12 +220,5 @@ public class Pattern {
 		this.stddevtime = stddevtime;
 	}
 	
-	public void extend()
-	{
-		for(Sequence s: sequenceList)
-		{
-			s.extend();
-		}
-	}
 	
 }

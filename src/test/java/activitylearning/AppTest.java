@@ -49,5 +49,29 @@ public class AppTest extends TestCase {
 //		Sequence s2 = new Sequence(d2,0,null);
 //		Pattern p1 = new Pattern(s1,0);
 //		assertTrue(p1.containsSequence(s2));
+		
+		Sequence s1 = new Sequence();
+		Sequence s2 = new Sequence();
+		
+		s1.addElement(new PositionData(0, 0, 0));
+		s1.addElement(new PositionData(1, 1, 1));
+		s1.addElement(new PositionData(2, 2, 2));
+		s1.addElement(new PositionData(3, 3, 3));
+
+		s2.addElement(new PositionData(0, 1, 0));
+		s2.addElement(new PositionData(1, 2, 1));
+		s2.addElement(new PositionData(2, 1, 2));
+		s2.addElement(new PositionData(3, 4, 3));
+		
+		int size = s1.getSequence().size() + s2.getSequence().size();
+		
+		Pattern p1 = new Pattern(s1, 0);
+		p1.evaluate(size);
+		Pattern p2 = new Pattern(s2, 0);
+		p2.evaluate(size);
+		
+		double sim = p1.distanceTo(p2);
+		System.out.println(sim);
+		assertTrue(sim > 0);
 	}
 }

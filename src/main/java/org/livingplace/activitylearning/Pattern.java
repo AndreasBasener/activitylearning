@@ -152,6 +152,47 @@ public class Pattern implements Comparable<Pattern>{
 		else
 			return -1;
 	}
+	
+	public double distanceTo(Pattern p)
+	{
+		int overlaps = 0;
+		int size1 = this.getSequence().getSequence().size();
+		int size2 = p.getSequence().getSequence().size();
+		int maxsize = 0;
+		double sim = 0;
+		double diff = this.meantime - p.getMeantime();
+//		if(((int)this.meantime == (int)p.getMeantime()) 
+//				|| (this.instances.size() == 2) 
+//				|| (p.getInstances().size() == 2))
+//			overlaps++;
+		
+		 if(Math.abs(diff) < 0.1)
+			 overlaps++;
+		 
+		for(int i = 0; i < size1 && i < size2; i++)
+		{
+			PositionData p1 = this.getSequence().getSequence().get(i);
+			PositionData p2 = p.getSequence().getSequence().get(i);
+			if(p1.equals(p2))
+				overlaps++;
+		}
+		
+		if(size1 > size2)
+		{
+			sim = (double)size2 / (double)size1;
+			maxsize = size1;
+		}
+		else
+		{
+			sim = (double)size1 / (double)size2;
+			maxsize = size2;
+		}
+		
+		sim *= (double)overlaps;
+		sim /= maxsize;
+		
+		return sim;
+	}
 
 //	/**
 //	 * @return the sequenceList

@@ -5,10 +5,12 @@ import java.util.List;
 
 import org.livingplace.activitylearning.data.PositionData;
 
-public class Pattern {
+public class Pattern implements Comparable<Pattern>{
 
 //	private List<Sequence> sequenceList;
 	private Sequence sequence;
+	
+	private List<Integer> instances;
 	
 	private double value;
 	private double meantime;
@@ -16,23 +18,28 @@ public class Pattern {
 	
 	private int patternCount = 0;
 	
+	private boolean used = false;
+	
 	public Pattern()
 	{
 //		this.sequenceList = new ArrayList<Sequence>();
 		this.sequence = new Sequence();
+		this.instances = new ArrayList<Integer>();
 	}
 	
-	public Pattern(Sequence sequence)
+	public Pattern(Sequence sequence, int index)
 	{
 		this();
 		this.sequence = sequence;
 //		addSequence(sequence);
-		increasePatternCount();
+		increasePatternCount(index);
 	}
 	public Pattern(Pattern pattern)
 	{
 //		this.sequenceList = pattern.sequenceList;
 		this.sequence = new Sequence(pattern.sequence);
+		this.instances = new ArrayList<Integer>();
+		this.instances.addAll(instances);
 //		increasePatternCount();
 //		this.value = pattern.value;
 //		this.meantime = pattern.meantime;
@@ -46,8 +53,9 @@ public class Pattern {
 //		this.sequenceList.add(sequence);
 //	}
 	
-	public void increasePatternCount()
+	public void increasePatternCount(int index)
 	{
+		instances.add(index);
 		patternCount++;
 	}
 	
@@ -135,6 +143,15 @@ public class Pattern {
 				this.stddevtime == p.stddevtime &&
 				this.value == p.value;
 	}
+	
+	public int compareTo(Pattern o) {
+		if (o.value > value)
+			return 1;
+		else if (o.value == value)
+			return 0;
+		else
+			return -1;
+	}
 
 //	/**
 //	 * @return the sequenceList
@@ -149,6 +166,20 @@ public class Pattern {
 //	public void setSequenceList(List<Sequence> sequenceList) {
 //		this.sequenceList = sequenceList;
 //	}
+
+	/**
+	 * @return the instances
+	 */
+	public List<Integer> getInstances() {
+		return instances;
+	}
+
+	/**
+	 * @param instances the instances to set
+	 */
+	public void setInstances(List<Integer> instances) {
+		this.instances = instances;
+	}
 
 	/**
 	 * @return the value
@@ -218,6 +249,20 @@ public class Pattern {
 	 */
 	public void setStddevtime(double stddevtime) {
 		this.stddevtime = stddevtime;
+	}
+
+	/**
+	 * @return the used
+	 */
+	public boolean isUsed() {
+		return used;
+	}
+
+	/**
+	 * @param used the used to set
+	 */
+	public void setUsed(boolean used) {
+		this.used = used;
 	}
 	
 	

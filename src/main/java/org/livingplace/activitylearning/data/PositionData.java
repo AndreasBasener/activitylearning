@@ -1,10 +1,15 @@
 package org.livingplace.activitylearning.data;
 
+import org.livingplace.activitylearning.Copy;
+import org.livingplace.scriptsimulator.Point3D;
+
 public class PositionData {
 
 	private long time;
 	
 	private double x,y;
+	
+	private Copy copy = Copy.FALSE;
 	
 	public PositionData(String data)
 	{
@@ -36,6 +41,16 @@ public class PositionData {
 				this.x == d.x &&
 				this.y == d.y;
 		
+	}
+	
+	public Point3D toPoint3D()
+	{
+		return new Point3D(x, y, 0);
+	}
+	
+	public String toString()
+	{
+		return "Time: " + time + " X: " + x + " Y: " + y + " Copy: " + copy;
 	}
 	
 	/**
@@ -78,6 +93,18 @@ public class PositionData {
 	public static int getValueSize()
 	{
 		return 3;
+	}
+	/**
+	 * @return the copy
+	 */
+	public Copy getCopy() {
+		return copy;
+	}
+	/**
+	 * @param copy the copy to set
+	 */
+	public void setCopy(Copy copy) {
+		this.copy = copy;
 	}
 	
 }

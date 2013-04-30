@@ -1,11 +1,11 @@
 package org.livingplace.activitylearning;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.livingplace.activitylearning.data.PositionData;
@@ -18,27 +18,52 @@ public class KDD {
 	
 	private List<Pattern> patternList;
 	
+	private List<Pattern> bestPattern;
+	
 	private SlidingWindow slidingWindow;
+	
+	public KDD()
+	{
+		this.bestPattern = new ArrayList<Pattern>();
+	}
 	
 	public KDD(String filename)
 	{
+		this();
 		this.filename = filename;
 		this.positionList = new ArrayList<PositionData>();
-		this.patternList = new ArrayList<Pattern>();
 		
 		parseFile();
-		
-//		this.slidingWindow = new SlidingWindow(3, positionList);
-		
-		discoverPatterns();
 		
 	}
 	public KDD(List<PositionData> data)
 	{
+		this();
 		this.positionList = data;
-		this.patternList = new ArrayList<Pattern>();
-		
-		discoverPatterns();
+	}
+	
+	public void dokdd()
+	{
+		boolean compressed = false;
+		do
+		{
+			discoverPatterns();
+			
+			Collections.sort(patternList);
+			
+			Pattern bp = patternList.get(0);
+			
+			System.out.println("Bestes Pattern: " + bp);
+			
+			bestPattern.add(bp);
+			
+			markEvents(bp);
+			
+			compressed = compressPattern();
+			
+			clusterPattern();
+			
+		} while(compressed);
 	}
 	
 	private void discoverPatterns()
@@ -49,27 +74,30 @@ public class KDD {
 		List<Pattern> childList;
 		List<Pattern> discoverdPattern = new ArrayList<Pattern>();
 		List<Pattern> initalPattern = new ArrayList<Pattern>();
-		
+		patternList = new ArrayList<Pattern>();
 		
 		// Initiale Pattern finden
 		for(PositionData d : positionList)
 		{
-			Sequence seq = new Sequence(d, index, positionList);
-			boolean containsSequence = false;
-			for(Pattern p: initalPattern)
+			if(!d.getClass().equals(Copy.PREDEFINED))
 			{
-				containsSequence = p.containsSequence(seq);
-				if(containsSequence)
+				Sequence seq = new Sequence(d, index, positionList);
+				boolean containsSequence = false;
+				for(Pattern p: initalPattern)
 				{
-					p.increasePatternCount();
-					break;
+					containsSequence = p.containsSequence(seq);
+					if(containsSequence)
+					{
+						p.increasePatternCount(index);
+						break;
+					}
 				}
+				if(!containsSequence)
+				{
+					initalPattern.add(new Pattern(seq,index));
+				}
+				index++;
 			}
-			if(!containsSequence)
-			{
-				initalPattern.add(new Pattern(seq));
-			}
-			index++;
 		}
 		for(Pattern p: initalPattern)
 		{
@@ -122,7 +150,7 @@ public class KDD {
 					}
 					Sequence s = new Sequence(slist, i, positionList);
 					if(p.containsSequence(s))
-						p.increasePatternCount();
+						p.increasePatternCount(i);
 				}
 			}
 			for(int i=0; i< extendedList.size(); i++)
@@ -145,13 +173,104 @@ public class KDD {
 				parentList = childList;
 			}
 		}
+		patternList = discoverdPattern;
 		System.out.println("Entdeckte Pattern: " + discoverdPattern.size());
-		for (Pattern p : discoverdPattern)
+//		for (Pattern p : discoverdPattern)
+//		{
+//			System.out.println(p);
+//		}
+	}
+	
+	private int markEvents(Pattern pattern)
+	{
+		int duplicate = 0, mark = 0, numnewevents = positionList.size();
+		boolean isNew = true;
+		
+		for(PositionData p: positionList)
 		{
-			System.out.println(p);
+			if(!p.getClass().equals(Copy.PREDEFINED))
+				p.setCopy(Copy.TRUE);
 		}
+		
+		for(Integer integer: pattern.getInstances())
+		{
+			pattern.setUsed(true);
+			isNew = true;
+//			System.out.println(p);
+			for(int i = 0; i < pattern.getSequence().getSequence().size(); i++)
+			{
+//				PositionData pos = p.getSequence().getSequence().get(i);
+				PositionData event = positionList.get(integer + i);
+//				System.out.println(event);
+				
+				if(!event.getCopy().equals(Copy.TRUE))
+				{
+					duplicate++;
+					pattern.setUsed(false);
+				}
+				else
+				{
+					if(isNew)
+					{
+						event.setCopy(Copy.NEW);
+						isNew = false;
+					}
+					else if (event.getCopy().equals(Copy.PREDEFINED))
+					{
+						
+					}
+					else
+					{
+						event.setCopy(Copy.FALSE);
+						mark++;
+						numnewevents--;
+					}
+				}
+			}
+		}
+		System.out.println("Duplicate: " + duplicate + " marked: " + mark);
+//		for(PositionData p: positionList)
+//		{
+//			System.out.println(p);
+//		}
+		
+		return numnewevents;
+	}
+	
+	public boolean compressPattern()
+	{
+		List<PositionData> newList = new ArrayList<PositionData>();
+		
+		PositionData firstEvent = positionList.get(0);
+		firstEvent.setCopy(Copy.TRUE);
+		
+		for(int i = 0; i < positionList.size(); i++)
+		{
+			Copy copy = positionList.get(i).getCopy();
+			if(copy.equals(Copy.NEW))
+			{
+				newList.add(firstEvent);
+			}
+			else if(copy.equals(Copy.TRUE) || copy.equals(Copy.PREDEFINED))
+			{
+				newList.add(positionList.get(i));
+			}
+		}
+		
+		if(newList.size() < positionList.size())
+		{
+			positionList = newList;
+			System.out.println("Liste komprimiert: " + positionList.size() + " Events übrig.");
+			return true;
+		}
+		return false;
 	}
 
+	public void clusterPattern()
+	{
+		
+	}
+	
 	private void parseFile()
 	{
 		try {
@@ -185,5 +304,29 @@ public class KDD {
 	 */
 	public void setSlidingWindow(SlidingWindow slidingWindow) {
 		this.slidingWindow = slidingWindow;
+	}
+	/**
+	 * @return the positionList
+	 */
+	public List<PositionData> getPositionList() {
+		return positionList;
+	}
+	/**
+	 * @param positionList the positionList to set
+	 */
+	public void setPositionList(List<PositionData> positionList) {
+		this.positionList = positionList;
+	}
+	/**
+	 * @return the patternList
+	 */
+	public List<Pattern> getPatternList() {
+		return patternList;
+	}
+	/**
+	 * @param patternList the patternList to set
+	 */
+	public void setPatternList(List<Pattern> patternList) {
+		this.patternList = patternList;
 	}
 }

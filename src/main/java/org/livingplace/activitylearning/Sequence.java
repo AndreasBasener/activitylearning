@@ -125,5 +125,19 @@ public class Sequence {
 	public void setSequence(List<PositionData> sequence) {
 		this.sequence = sequence;
 	}
+
+	/**
+	 * @return the startIndex
+	 */
+	public int getStartIndex() {
+		return startIndex;
+	}
+
+	/**
+	 * @param startIndex the startIndex to set
+	 */
+	public void setStartIndex(int startIndex) {
+		this.startIndex = startIndex;
+	}
 	
 }

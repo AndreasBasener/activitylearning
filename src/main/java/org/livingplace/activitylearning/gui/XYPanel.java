@@ -14,7 +14,10 @@ import java.util.Random;
 
 import javax.swing.JPanel;
 
+import org.livingplace.activitylearning.Pattern;
+import org.livingplace.activitylearning.PatternCluster;
 import org.livingplace.activitylearning.cluster.Cluster;
+import org.livingplace.activitylearning.data.PositionData;
 import org.livingplace.scriptsimulator.Point3D;
 /**
  * 
@@ -34,8 +37,8 @@ public class XYPanel extends JPanel
 	private static final int pointStroke = 4;
 	private static final int centroidStroke = 6;
 
-	private int width;
-	private int height;
+//	private int width;
+//	private int height;
 
 	private int xScale;
 	private int yScale;
@@ -46,17 +49,19 @@ public class XYPanel extends JPanel
 	private Random random;
 	
 	private List<Cluster> cluster;
+	private List<PatternCluster> patternCluster;
 
 	public XYPanel(int width, int height, int xScale, int yScale) 
 	{
-		this.width = width;
-		this.height = height;
+//		this.width = width;
+//		this.height = height;
 		this.xScale = xScale;
 		this.yScale = yScale;
 
 		this.point2DList = new ArrayList<Point2D>();
 		this.point3DList = new ArrayList<Point3D>();
 		this.cluster = new ArrayList<Cluster>();
+		this.patternCluster = new ArrayList<PatternCluster>();
 		
 		this.random = new Random();
 	}
@@ -195,6 +200,21 @@ public class XYPanel extends JPanel
 			
 			cCount++;
 		}
+		for(PatternCluster pc: patternCluster)
+		{
+			g2d.setColor(new Color(random.nextInt()));
+			g2d.setStroke(new BasicStroke(pointStroke));
+			
+			for(Pattern p: pc.getPatternList())
+			{
+				List<PositionData> plist = p.getSequence().getSequence();
+				for(PositionData pd: plist)
+				{
+					g2d.drawLine((int) (pd.getX() * xSteps) + offset, (int) (pd.getY() * ySteps) + offset, 
+							(int) (pd.getX() * xSteps) + offset, (int) (pd.getY() * ySteps) + offset);
+				}
+			}
+		}
 		setBackground(Color.WHITE);
 	}
 
@@ -213,6 +233,11 @@ public class XYPanel extends JPanel
 
 	public void setCluster(List<Cluster> cluster) {
 		this.cluster = cluster;
+	}
+	
+	public void setPatternCluster(List<PatternCluster> patternCluster)
+	{
+		this.patternCluster = patternCluster;
 	}
 
 }

@@ -58,10 +58,10 @@ public class AppTest extends TestCase {
 		s1.addElement(new PositionData(2, 2, 2));
 		s1.addElement(new PositionData(3, 3, 3));
 
-		s2.addElement(new PositionData(0, 1, 0));
-		s2.addElement(new PositionData(1, 2, 1));
-		s2.addElement(new PositionData(2, 1, 2));
-		s2.addElement(new PositionData(3, 4, 3));
+		s2.addElement(new PositionData(0, 0, 0));
+		s2.addElement(new PositionData(1, 1, 1));
+		s2.addElement(new PositionData(2, 2, 2));
+		s2.addElement(new PositionData(3, 3, 3));
 		
 		int size = s1.getSequence().size() + s2.getSequence().size();
 		

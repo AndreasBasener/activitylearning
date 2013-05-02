@@ -53,6 +53,14 @@ public class PositionData {
 		return "Time: " + time + " X: " + x + " Y: " + y + " Copy: " + copy;
 	}
 	
+	public double euclidianDistance()
+	{
+		double dist = x*x + y*y;
+		dist = Math.sqrt(dist);
+		
+		return dist;
+	}
+	
 	/**
 	 * @return the time
 	 */

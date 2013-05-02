@@ -17,7 +17,7 @@ public class App {
 	
 	public static void main(String[] args) {
 		
-//		GUI gui = new GUI();
+		GUI gui = new GUI();
 		
 		List<PositionData> data = new ArrayList<PositionData>();
 		data.add(new PositionData(0,0,0));
@@ -40,6 +40,10 @@ public class App {
 		KDD kdd = new KDD("data\\csv_PatternTest003.csv");
 //		KDD kdd = new KDD(data);
 		kdd.dokdd();
+		for(PatternCluster pc : kdd.getClusterList())
+			System.out.println(pc);
+		
+		gui.setPatternClusterList(kdd.getClusterList());
 		
 //		for(PositionData p: kdd.getPositionList())
 //		{

@@ -160,15 +160,15 @@ public class Pattern implements Comparable<Pattern>{
 		int size2 = p.getSequence().getSequence().size();
 		int maxsize = 0;
 		double sim = 0;
-		double diff = this.meantime - p.getMeantime();
-//		if(((int)this.meantime == (int)p.getMeantime()) 
-//				|| (this.instances.size() == 2) 
-//				|| (p.getInstances().size() == 2))
-//			overlaps++;
+		double mean1 = this.meantime;
+		double mean2 = p.getMeantime();
+		double mean = 0;
 		
-		 if(Math.abs(diff) < 0.1)
-			 overlaps++;
-		 
+		if(mean1 > mean2)
+			mean = mean2 / mean1;
+		else
+			mean = mean1 / mean2;
+
 		for(int i = 0; i < size1 && i < size2; i++)
 		{
 			PositionData p1 = this.getSequence().getSequence().get(i);
@@ -179,17 +179,20 @@ public class Pattern implements Comparable<Pattern>{
 		
 		if(size1 > size2)
 		{
-			sim = (double)size2 / (double)size1;
+//			sim = (double)size2 / (double)size1;
 			maxsize = size1;
 		}
 		else
 		{
-			sim = (double)size1 / (double)size2;
+//			sim = (double)size1 / (double)size2;
 			maxsize = size2;
 		}
 		
-		sim *= (double)overlaps;
-		sim /= maxsize;
+		sim = (double) overlaps / (double) maxsize;
+
+		sim *= 1 - Helper.MEAN_OVERLAP_RATIO;
+		
+		sim += mean * Helper.MEAN_OVERLAP_RATIO;
 		
 		return sim;
 	}

@@ -202,9 +202,31 @@ public class XYPanel extends JPanel
 		}
 		for(PatternCluster pc: patternCluster)
 		{
-			g2d.setColor(new Color(random.nextInt()));
+//			g2d.setColor(new Color(random.nextInt()));
 			g2d.setStroke(new BasicStroke(pointStroke));
-			
+			switch (cCount) {
+			case 0:
+				g2d.setColor(Color.RED);
+				break;
+			case 1:
+				g2d.setColor(Color.BLUE);
+				break;
+			case 2:
+				g2d.setColor(Color.GREEN);
+				break;
+			case 3:
+				g2d.setColor(Color.YELLOW);
+				break;
+			case 4:
+				g2d.setColor(Color.GRAY);
+				break;
+			case 5:
+				g2d.setColor(Color.ORANGE);
+				break;
+			default:
+				g2d.setColor(new Color(random.nextInt()));
+				break;
+			}
 			for(Pattern p: pc.getPatternList())
 			{
 				List<PositionData> plist = p.getSequence().getSequence();
@@ -214,6 +236,7 @@ public class XYPanel extends JPanel
 							(int) (pd.getX() * xSteps) + offset, (int) (pd.getY() * ySteps) + offset);
 				}
 			}
+			cCount++;
 		}
 		setBackground(Color.WHITE);
 	}

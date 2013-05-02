@@ -89,7 +89,7 @@ public class Sequence {
 			List<PositionData> list = new ArrayList<PositionData>();
 			list.add(data);
 			list.addAll(sequence);
-			
+
 			this.sequence = list;
 			this.startIndex -= 1;
 			extended = true;
@@ -99,6 +99,7 @@ public class Sequence {
 			this.sequence.add(eventList.get(startIndex + sequence.size()));
 			extended = true;
 		}
+//		System.out.println("Ende: " + this);
 		return extended;
 	}
 
@@ -107,7 +108,7 @@ public class Sequence {
 		String s = "Index: " + startIndex + " Sequence: ";
 		for(PositionData p : sequence)
 		{
-			s += p.getX() + "," + p.getY() + " ";
+			s += p.getfSpace().getLabel() + " ";
 		}
 		return s;
 	}

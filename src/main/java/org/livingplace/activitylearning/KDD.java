@@ -48,6 +48,8 @@ public class KDD {
 	public void dokdd()
 	{
 		boolean compressed = false;
+//		for(PositionData d : positionList)
+//			System.out.println(d);
 		do
 		{
 			discoverPatterns();
@@ -56,7 +58,7 @@ public class KDD {
 			
 			Pattern bp = patternList.get(0);
 			
-//			System.out.println("Bestes Pattern: " + bp);
+			System.out.println("Bestes Pattern: " + bp);
 			
 			bestPattern.add(bp);
 			
@@ -64,6 +66,7 @@ public class KDD {
 			
 			compressed = compressPattern();
 			
+//			compressed = false;
 		} while(compressed);
 
 		clusterPattern();
@@ -115,13 +118,6 @@ public class KDD {
 			p.evaluate(positionList.size());
 		}
 		
-//		Pattern pat = patternList.get(0);
-//		System.out.println(pat);
-//		boolean ext = pat.extend();
-//		pat.evaluate(positionList.size());
-//		System.out.println(pat);
-//		System.out.println(ext);
-		
 		List<Pattern> parentList = patternList;
 		while(!done)
 		{
@@ -135,6 +131,7 @@ public class KDD {
 //				System.out.println(parentPattern);
 				Pattern ep = new Pattern(parentPattern);
 				boolean extended = ep.extend();
+//				System.out.println(ep);
 				if(extended)
 				{
 					extendedList.add(ep);
@@ -144,6 +141,7 @@ public class KDD {
 			}
 			for(Pattern p: extendedList)
 			{
+//				System.out.println("ex: " +p);
 				for(int i = 0; i < (positionList.size() - p.getSequence().getSequence().size() + 1); i++)
 				{
 					List<PositionData> slist = new ArrayList<PositionData>();
@@ -177,11 +175,11 @@ public class KDD {
 			}
 		}
 		patternList = discoverdPattern;
-//		System.out.println("Entdeckte Pattern: " + discoverdPattern.size());
-//		for (Pattern p : discoverdPattern)
-//		{
-//			System.out.println(p);
-//		}
+		System.out.println("Entdeckte Pattern: " + discoverdPattern.size());
+		for (Pattern p : discoverdPattern)
+		{
+			System.out.println(p);
+		}
 	}
 	
 	private int markEvents(Pattern pattern)

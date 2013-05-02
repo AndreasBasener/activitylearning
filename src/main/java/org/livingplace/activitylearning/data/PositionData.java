@@ -1,6 +1,7 @@
 package org.livingplace.activitylearning.data;
 
 import org.livingplace.activitylearning.Copy;
+import org.livingplace.activitylearning.FunctionalSpace;
 import org.livingplace.scriptsimulator.Point3D;
 
 public class PositionData {
@@ -11,6 +12,8 @@ public class PositionData {
 	
 	private Copy copy = Copy.FALSE;
 	
+	private FunctionalSpace fSpace;
+	
 	public PositionData(String data)
 	{
 		String strarr[] = data.split(";");
@@ -18,12 +21,14 @@ public class PositionData {
 		time = Long.valueOf(strarr[0]);
 		x = Double.valueOf(strarr[1]);
 		y = Double.valueOf(strarr[2]);
+		fSpace = new FunctionalSpace(x, y);
 	}
 	public PositionData(long time, double x, double y)
 	{
 		this.time = time;
 		this.x = x;
 		this.y = y;
+		fSpace = new FunctionalSpace(x, y);
 	}
 	
 	@Override
@@ -38,8 +43,9 @@ public class PositionData {
 		
 		return 
 //				this.time == d.time &&
-				this.x == d.x &&
-				this.y == d.y;
+//				this.x == d.x &&
+//				this.y == d.y;
+				this.fSpace.equals(d.fSpace);
 		
 	}
 	
@@ -50,7 +56,7 @@ public class PositionData {
 	
 	public String toString()
 	{
-		return "Time: " + time + " X: " + x + " Y: " + y + " Copy: " + copy;
+		return "Time: " + time + " FSpace: " + fSpace + " Copy: " + copy ;
 	}
 	
 	public double euclidianDistance()
@@ -113,6 +119,18 @@ public class PositionData {
 	 */
 	public void setCopy(Copy copy) {
 		this.copy = copy;
+	}
+	/**
+	 * @return the fSpace
+	 */
+	public FunctionalSpace getfSpace() {
+		return fSpace;
+	}
+	/**
+	 * @param fSpace the fSpace to set
+	 */
+	public void setfSpace(FunctionalSpace fSpace) {
+		this.fSpace = fSpace;
 	}
 	
 }

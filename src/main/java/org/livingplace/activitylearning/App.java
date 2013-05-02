@@ -19,22 +19,22 @@ public class App {
 		
 		GUI gui = new GUI();
 		
-		List<PositionData> data = new ArrayList<PositionData>();
-		data.add(new PositionData(0,0,0));
-		data.add(new PositionData(1,1,1));
-		data.add(new PositionData(2,2,2));
-		data.add(new PositionData(0,0,0));
-		data.add(new PositionData(1,1,1));
-		data.add(new PositionData(3,3,3));
-		data.add(new PositionData(0,0,0));
-		data.add(new PositionData(1,1,1));
-		data.add(new PositionData(4,4,4));
-		data.add(new PositionData(0,0,0));
-		data.add(new PositionData(1,1,1));
-		data.add(new PositionData(5,5,5));
-		data.add(new PositionData(0,0,0));
-		data.add(new PositionData(1,1,1));
-		data.add(new PositionData(2,2,2));
+//		List<PositionData> data = new ArrayList<PositionData>();
+//		data.add(new PositionData(0,0,0));
+//		data.add(new PositionData(1,1,1));
+//		data.add(new PositionData(2,2,2));
+//		data.add(new PositionData(0,0,0));
+//		data.add(new PositionData(1,1,1));
+//		data.add(new PositionData(3,3,3));
+//		data.add(new PositionData(0,0,0));
+//		data.add(new PositionData(1,1,1));
+//		data.add(new PositionData(4,4,4));
+//		data.add(new PositionData(0,0,0));
+//		data.add(new PositionData(1,1,1));
+//		data.add(new PositionData(5,5,5));
+//		data.add(new PositionData(0,0,0));
+//		data.add(new PositionData(1,1,1));
+//		data.add(new PositionData(2,2,2));
 		
 		
 		KDD kdd = new KDD("data\\csv_PatternTest003.csv");

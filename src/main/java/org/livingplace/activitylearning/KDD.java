@@ -20,6 +20,8 @@ public class KDD {
 	
 	private List<Pattern> bestPattern;
 	
+	private List<Pattern> discoveredPattern;
+	
 	private List<PatternCluster> clusterList;
 	
 	private SlidingWindow slidingWindow;
@@ -28,6 +30,7 @@ public class KDD {
 	{
 		this.bestPattern = new ArrayList<Pattern>();
 		this.clusterList = new ArrayList<PatternCluster>();
+		this.discoveredPattern = new ArrayList<Pattern>();
 	}
 	
 	public KDD(String filename)
@@ -58,7 +61,7 @@ public class KDD {
 			
 			Pattern bp = patternList.get(0);
 			
-			System.out.println("Bestes Pattern: " + bp);
+//			System.out.println("Bestes Pattern: " + bp);
 			
 			bestPattern.add(bp);
 			
@@ -69,7 +72,11 @@ public class KDD {
 //			compressed = false;
 		} while(compressed);
 
+//		for(Pattern p: discoveredPattern)
+//			System.out.println(p);
 		clusterPattern();
+		
+		compressCluster();
 	}
 	
 	private void discoverPatterns()
@@ -78,7 +85,7 @@ public class KDD {
 		boolean done = false;
 		
 		List<Pattern> childList;
-		List<Pattern> discoverdPattern = new ArrayList<Pattern>();
+		List<Pattern> localDiscoverdPattern = new ArrayList<Pattern>();
 		List<Pattern> initalPattern = new ArrayList<Pattern>();
 		patternList = new ArrayList<Pattern>();
 		
@@ -136,8 +143,8 @@ public class KDD {
 				{
 					extendedList.add(ep);
 				}
-				if(!discoverdPattern.contains(parentPattern))
-					discoverdPattern.add(parentPattern);
+				if(!localDiscoverdPattern.contains(parentPattern))
+					localDiscoverdPattern.add(parentPattern);
 			}
 			for(Pattern p: extendedList)
 			{
@@ -174,12 +181,13 @@ public class KDD {
 				parentList = childList;
 			}
 		}
-		patternList = discoverdPattern;
-		System.out.println("Entdeckte Pattern: " + discoverdPattern.size());
-		for (Pattern p : discoverdPattern)
-		{
-			System.out.println(p);
-		}
+		patternList = localDiscoverdPattern;
+//		System.out.println("Entdeckte Pattern: " + localDiscoverdPattern.size());
+//		for (Pattern p : localDiscoverdPattern)
+//		{
+//			System.out.println(p);
+//		}
+		discoveredPattern.addAll(localDiscoverdPattern);
 	}
 	
 	private int markEvents(Pattern pattern)
@@ -269,12 +277,16 @@ public class KDD {
 
 	public void clusterPattern()
 	{
-		for (Pattern p: bestPattern)
+		for (Pattern p: discoveredPattern)
 		{
 			boolean contains = false;
 			for(PatternCluster pc: clusterList)
 			{
 				contains = pc.containsPattern(p);
+				if(contains)
+					break;
+				
+				contains = pc.containsPatternSequence(p);
 				if(contains)
 					break;
 				
@@ -292,6 +304,45 @@ public class KDD {
 				clusterList.add(cluster);
 			}
 		}
+	}
+	
+	private void compressCluster()
+	{
+		boolean maxCompression = true;
+		PatternCluster pc1 = null;
+		PatternCluster pc2 = null;
+		
+		do
+		{
+			maxCompression = true;
+			for(int i = 0; i < clusterList.size(); i++)
+			{
+				boolean bool = false;
+				pc1 = clusterList.get(i);
+				for(int j = 0; j < clusterList.size(); j++)
+				{
+					if (i != j) // Nicht ein PatternCluster mit sich selbst mergen
+					{
+						pc2 = clusterList.get(j);
+						for(Pattern p: pc2.getPatternList())
+						{
+							bool = pc1.containsPatternSequence(p) || pc1.isSimilar(p);
+							if(!bool)
+								break;
+						}
+						if(!bool)
+							break;
+					}
+					if(bool)
+					{
+						pc1.merge(pc2);
+						clusterList.remove(j);
+						maxCompression = false;
+					}
+				}
+			}
+		}
+		while(!maxCompression);
 	}
 	
 	private void parseFile()

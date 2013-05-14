@@ -36,6 +36,18 @@ public class PatternCluster {
 		return patternList.contains(pattern);
 	}
 	
+	public boolean containsPatternSequence(Pattern pattern)
+	{
+		boolean bool = false;
+		
+		for(Pattern p: patternList)
+		{
+			bool = p.containsPatternSequence(pattern);
+		}
+		
+		return bool;
+	}
+	
 	public boolean isSimilar(Pattern pattern)
 	{
 		for(Pattern p: patternList)
@@ -44,6 +56,20 @@ public class PatternCluster {
 				return true;
 		}
 		return false;
+	}
+	
+	public void merge(PatternCluster pc)
+	{
+		if (pc == null)
+			return;
+		
+		for(Pattern p : pc.getPatternList())
+		{
+			if(!patternList.contains(p))
+			{
+				patternList.add(p);
+			}
+		}
 	}
 	
 	public String toString()

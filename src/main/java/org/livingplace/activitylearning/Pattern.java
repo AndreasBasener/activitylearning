@@ -196,6 +196,29 @@ public class Pattern implements Comparable<Pattern>{
 		
 		return sim;
 	}
+	
+	public boolean containsPatternSequence(Pattern pattern)
+	{
+		boolean bool = false;
+		List<PositionData> s1 = sequence.getSequence();
+		List<PositionData> s2 = pattern.getSequence().getSequence();
+		
+		int index = s1.indexOf(s2.get(0));
+		
+		if((index + s2.size() > s1.size()) || index == -1) // Sequenz ist zu lang, um noch zu passen
+			return false;
+		
+		for(int i= index; i < s2.size(); i++)
+		{
+			bool = s1.get(index+i).equals(s2.get(i));
+			if(!bool)
+			{
+				return false;
+			}
+		}
+		
+		return true;
+	}
 
 //	/**
 //	 * @return the sequenceList

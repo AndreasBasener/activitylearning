@@ -24,6 +24,11 @@ public class GUI {
 		graph.setVisible(true);
 	}
 	
+	public void repaint()
+	{
+		graph.repaint();
+	}
+	
 	public void drawPoint3D(Point3D point)
 	{
 		graph.addPoint(point);

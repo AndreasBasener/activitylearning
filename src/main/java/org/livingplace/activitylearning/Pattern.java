@@ -3,7 +3,7 @@ package org.livingplace.activitylearning;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.livingplace.activitylearning.data.PositionData;
+import org.livingplace.activitylearning.data.IData;
 
 public class Pattern implements Comparable<Pattern>{
 
@@ -79,33 +79,33 @@ public class Pattern implements Comparable<Pattern>{
 	{
 		double sum = 0, diff = 0;
 		int newsize = 0;
-		if(sequence == null || sequence.getSequence().size() == 0)
+		if(sequence == null || sequence.getDataSequence().size() == 0)
 		{
 			this.value = 0;
 		}
-		else if (sequence.getSequence().size() == 1)
+		else if (sequence.getDataSequence().size() == 1)
 		{
 			this.value = (double) patternCount / (double) eventCount;
 		}
 		else
 		{
-			for(PositionData p : sequence.getSequence())
+			for(IData d : sequence.getDataSequence())
 			{
-				sum += p.getTime();
+				sum += d.getTime();
 			}
-			meantime = (double) sum / (double) sequence.getSequence().size();
+			meantime = (double) sum / (double) sequence.getDataSequence().size();
 			
 			sum = 0;
-			for(PositionData p : sequence.getSequence())
+			for(IData d : sequence.getDataSequence())
 			{
-				diff = p.getTime() - this.meantime;
+				diff = d.getTime() - this.meantime;
 				sum += diff * diff;
 			}
-			stddevtime = Math.sqrt((double) sum / (double) sequence.getSequence().size());
+			stddevtime = Math.sqrt((double) sum / (double) sequence.getDataSequence().size());
 
 			newsize = eventCount -
-					  (sequence.getSequence().size() * patternCount) +
-					  sequence.getSequence().size() +
+					  (sequence.getDataSequence().size() * patternCount) +
+					  sequence.getDataSequence().size() +
 					  patternCount;
 			
 			if (newsize == 0)
@@ -156,8 +156,8 @@ public class Pattern implements Comparable<Pattern>{
 	public double distanceTo(Pattern p)
 	{
 		int overlaps = 0;
-		int size1 = this.getSequence().getSequence().size();
-		int size2 = p.getSequence().getSequence().size();
+		int size1 = this.getSequence().getDataSequence().size();
+		int size2 = p.getSequence().getDataSequence().size();
 		int maxsize = 0;
 		double sim = 0;
 		double mean1 = this.meantime;
@@ -171,8 +171,8 @@ public class Pattern implements Comparable<Pattern>{
 
 		for(int i = 0; i < size1 && i < size2; i++)
 		{
-			PositionData p1 = this.getSequence().getSequence().get(i);
-			PositionData p2 = p.getSequence().getSequence().get(i);
+			IData p1 = this.getSequence().getDataSequence().get(i);
+			IData p2 = p.getSequence().getDataSequence().get(i);
 			if(p1.equals(p2))
 				overlaps++;
 		}
@@ -200,8 +200,8 @@ public class Pattern implements Comparable<Pattern>{
 	public boolean containsPatternSequence(Pattern pattern)
 	{
 		boolean bool = false;
-		List<PositionData> s1 = sequence.getSequence();
-		List<PositionData> s2 = pattern.getSequence().getSequence();
+		List<IData> s1 = sequence.getDataSequence();
+		List<IData> s2 = pattern.getSequence().getDataSequence();
 		
 		int index = s1.indexOf(s2.get(0));
 		

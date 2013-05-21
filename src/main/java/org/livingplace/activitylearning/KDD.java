@@ -8,12 +8,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.livingplace.activitylearning.data.IData;
 import org.livingplace.activitylearning.data.PositionData;
 
 public class KDD {
 	
 	private String filename;
 	
+	private List<IData> dataList;
+	
+	@Deprecated
 	private List<PositionData> positionList;
 	
 	private List<Pattern> patternList;
@@ -31,6 +35,7 @@ public class KDD {
 		this.bestPattern = new ArrayList<Pattern>();
 		this.clusterList = new ArrayList<PatternCluster>();
 		this.discoveredPattern = new ArrayList<Pattern>();
+		this.dataList = new ArrayList<IData>();
 	}
 	
 	public KDD(String filename)
@@ -51,8 +56,7 @@ public class KDD {
 	public void dokdd()
 	{
 		boolean compressed = false;
-//		for(PositionData d : positionList)
-//			System.out.println(d);
+
 		do
 		{
 			discoverPatterns();
@@ -69,14 +73,17 @@ public class KDD {
 			
 			compressed = compressPattern();
 			
-//			compressed = false;
-		} while(compressed);
+//			compressed = true;
+		} while(!compressed);
 
 //		for(Pattern p: discoveredPattern)
 //			System.out.println(p);
 		clusterPattern();
 		
 		compressCluster();
+		
+		for(PatternCluster pc : clusterList)
+			System.out.println(pc);
 	}
 	
 	private void discoverPatterns()
@@ -90,11 +97,13 @@ public class KDD {
 		patternList = new ArrayList<Pattern>();
 		
 		// Initiale Pattern finden
-		for(PositionData d : positionList)
+//		for(PositionData d : positionList)
+		for(IData d: dataList)
 		{
 			if(!d.getClass().equals(Copy.PREDEFINED))
 			{
-				Sequence seq = new Sequence(d, index, positionList);
+//				Sequence seq = new Sequence(d, index, positionList);
+				Sequence seq = new Sequence(d, index, dataList);
 				boolean containsSequence = false;
 				for(Pattern p: initalPattern)
 				{
@@ -122,7 +131,8 @@ public class KDD {
 		//Initiale Pattern evaluieren
 		for(Pattern p : patternList)
 		{
-			p.evaluate(positionList.size());
+//			p.evaluate(positionList.size());
+			p.evaluate(dataList.size());
 		}
 		
 		List<Pattern> parentList = patternList;
@@ -149,14 +159,16 @@ public class KDD {
 			for(Pattern p: extendedList)
 			{
 //				System.out.println("ex: " +p);
-				for(int i = 0; i < (positionList.size() - p.getSequence().getSequence().size() + 1); i++)
+//				for(int i = 0; i < (positionList.size() - p.getSequence().getSequence().size() + 1); i++)
+				for(int i = 0; i < (dataList.size() - p.getSequence().getDataSequence().size() + 1); i++)
 				{
-					List<PositionData> slist = new ArrayList<PositionData>();
-					for(int j = 0; j < p.getSequence().getSequence().size();j++)
+//					List<PositionData> slist = new ArrayList<PositionData>();
+					List<IData> slist = new ArrayList<IData>();
+					for(int j = 0; j < p.getSequence().getDataSequence().size();j++)
 					{
-						slist.add(positionList.get(i+j));
+						slist.add(dataList.get(i+j));
 					}
-					Sequence s = new Sequence(slist, i, positionList);
+					Sequence s = new Sequence(slist, i, dataList);
 					if(p.containsSequence(s))
 						p.increasePatternCount(i);
 				}
@@ -164,7 +176,7 @@ public class KDD {
 			for(int i=0; i< extendedList.size(); i++)
 			{
 				Pattern p = extendedList.get(i);
-				p.evaluate(positionList.size());
+				p.evaluate(dataList.size());
 //				System.out.printlng("Muster: " + i + " " + p);
 				if(p.getPatternCount() > 1)
 				{
@@ -192,13 +204,14 @@ public class KDD {
 	
 	private int markEvents(Pattern pattern)
 	{
-		int duplicate = 0, mark = 0, numnewevents = positionList.size();
+		int numnewevents = dataList.size();
 		boolean isNew = true;
 		
-		for(PositionData p: positionList)
+//		for(PositionData p: positionList)
+		for(IData d: dataList)
 		{
-			if(!p.getClass().equals(Copy.PREDEFINED))
-				p.setCopy(Copy.TRUE);
+			if(!d.getCopy().equals(Copy.PREDEFINED))
+				d.setCopy(Copy.TRUE);
 		}
 		
 		for(Integer integer: pattern.getInstances())
@@ -206,15 +219,15 @@ public class KDD {
 			pattern.setUsed(true);
 			isNew = true;
 //			System.out.println(p);
-			for(int i = 0; i < pattern.getSequence().getSequence().size(); i++)
+			for(int i = 0; i < pattern.getSequence().getDataSequence().size(); i++)
 			{
 //				PositionData pos = p.getSequence().getSequence().get(i);
-				PositionData event = positionList.get(integer + i);
+//				PositionData event = positionList.get(integer + i);
+				IData event = dataList.get(integer + i);
 //				System.out.println(event);
 				
 				if(!event.getCopy().equals(Copy.TRUE))
 				{
-					duplicate++;
 					pattern.setUsed(false);
 				}
 				else
@@ -231,48 +244,41 @@ public class KDD {
 					else
 					{
 						event.setCopy(Copy.FALSE);
-						mark++;
 						numnewevents--;
 					}
 				}
 			}
 		}
-//		System.out.println("Duplicate: " + duplicate + " marked: " + mark);
-//		for(PositionData p: positionList)
-//		{
-//			System.out.println(p);
-//		}
 		
 		return numnewevents;
 	}
 	
 	public boolean compressPattern()
 	{
-		List<PositionData> newList = new ArrayList<PositionData>();
+		List<IData> newList = new ArrayList<IData>();
 		
-		PositionData firstEvent = positionList.get(0);
+		IData firstEvent = dataList.get(0);
 		firstEvent.setCopy(Copy.TRUE);
 		
-		for(int i = 0; i < positionList.size(); i++)
+		for(int i = 0; i < dataList.size(); i++)
 		{
-			Copy copy = positionList.get(i).getCopy();
+			Copy copy = dataList.get(i).getCopy();
 			if(copy.equals(Copy.NEW))
 			{
 				newList.add(firstEvent);
 			}
 			else if(copy.equals(Copy.TRUE) || copy.equals(Copy.PREDEFINED))
 			{
-				newList.add(positionList.get(i));
+				newList.add(dataList.get(i));
 			}
 		}
 		
-		if(newList.size() < positionList.size())
+		if(newList.size() < dataList.size())
 		{
-			positionList = newList;
-//			System.out.println("Liste komprimiert: " + positionList.size() + " Events übrig.");
-			return true;
+			dataList = newList;
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	public void clusterPattern()
@@ -355,6 +361,7 @@ public class KDD {
 				while((line = br.readLine())!=null)
 				{
 					positionList.add(new PositionData(line));
+					dataList.add(new PositionData(line));
 //					System.out.println(line);
 				}
 			} catch (IOException e) {

@@ -4,7 +4,7 @@ import org.livingplace.activitylearning.Copy;
 import org.livingplace.activitylearning.FunctionalSpace;
 import org.livingplace.scriptsimulator.Point3D;
 
-public class PositionData {
+public class PositionData implements IData{
 
 	private long time;
 	
@@ -59,12 +59,28 @@ public class PositionData {
 		return "Time: " + time + " FSpace: " + fSpace + " Copy: " + copy ;
 	}
 	
-	public double euclidianDistance()
+	public String toShortString()
 	{
-		double dist = x*x + y*y;
+		return fSpace.getLabel().toString();
+	}
+	
+	public double euclidianDistance(PositionData data)
+	{
+		double dist = Math.pow(x - data.x, 2) + Math.pow(y - data.y, 2);
 		dist = Math.sqrt(dist);
 		
 		return dist;
+	}
+
+	public double distanceTo(IData data) {
+		if (data == this)
+			return 0;
+		if (data instanceof PositionData)
+		{
+			PositionData p = (PositionData) data;
+			return euclidianDistance(p);
+		}
+		return -1;
 	}
 	
 	/**

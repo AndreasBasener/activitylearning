@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import org.livingplace.activitylearning.Pattern;
 import org.livingplace.activitylearning.PatternCluster;
 import org.livingplace.activitylearning.cluster.Cluster;
+import org.livingplace.activitylearning.data.IData;
 import org.livingplace.activitylearning.data.PositionData;
 import org.livingplace.scriptsimulator.Point3D;
 /**
@@ -229,11 +230,15 @@ public class XYPanel extends JPanel
 			}
 			for(Pattern p: pc.getPatternList())
 			{
-				List<PositionData> plist = p.getSequence().getSequence();
-				for(PositionData pd: plist)
+				List<IData> plist = p.getSequence().getDataSequence();
+				for(IData data: plist)
 				{
-					g2d.drawLine((int) (pd.getX() * xSteps) + offset, (int) (pd.getY() * ySteps) + offset, 
-							(int) (pd.getX() * xSteps) + offset, (int) (pd.getY() * ySteps) + offset);
+					if (data instanceof PositionData)
+					{
+						PositionData pos = (PositionData) data;
+						g2d.drawLine((int) (pos.getX() * xSteps) + offset, (int) (pos.getY() * ySteps) + offset, 
+								(int) (pos.getX() * xSteps) + offset, (int) (pos.getY() * ySteps) + offset);
+					}
 				}
 			}
 			cCount++;

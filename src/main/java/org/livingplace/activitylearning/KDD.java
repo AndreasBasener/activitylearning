@@ -8,10 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.livingplace.activitylearning.data.Copy;
-import org.livingplace.activitylearning.data.IData;
-import org.livingplace.activitylearning.data.PositionData;
-import org.livingplace.activitylearning.data.StorageData;
+import org.livingplace.activitylearning.data.*;
 import org.livingplace.activitylearning.pattern.Pattern;
 import org.livingplace.activitylearning.pattern.PatternCluster;
 import org.livingplace.activitylearning.pattern.Sequence;
@@ -371,10 +368,26 @@ public class KDD {
 					{
 						String str = strarr[0];
 						String data = strarr[1];
-						if(str.equals("Ubisense"))
+						if(str.equals("Alarm"))
+							dataList.add(new AlarmData(data));
+						else if(str.equals("Bed"))
+							dataList.add(new BedData(data));
+						else if(str.equals("Blinds"))
+							dataList.add(new BlindsData(data));
+						else if(str.equals("DoorBell"))
+							dataList.add(new DoorBellData(data));
+						else if(str.equals("Door"))
+							dataList.add(new DoorData(data));
+						else if(str.equals("Ubisense"))
 							dataList.add(new PositionData(data));
+						else if(str.equals("Power"))
+							dataList.add(new PowerData(data));
 						else if(str.equals("Storage"))
 							dataList.add(new StorageData(data));
+						else if(str.equals("Water"))
+							dataList.add(new WaterData(data));
+						else if(str.equals("Window"))
+							dataList.add(new WindowData(data));
 					}
 //					dataList.add(new PositionData(line));
 //					System.out.println(line);
@@ -386,10 +399,10 @@ public class KDD {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		for(IData d: dataList)
-		{
-			System.out.println(d);
-		}
+//		for(IData d: dataList)
+//		{
+//			System.out.println(d);
+//		}
 	}
 
 	/**

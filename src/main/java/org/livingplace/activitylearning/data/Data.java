@@ -6,6 +6,11 @@ public class Data  implements IData{
 	
 	protected Copy copy;
 	
+	public Data()
+	{
+		copy = Copy.FALSE;
+	}
+	
 	public double distanceTo(IData data) {
 		return 0;
 	}

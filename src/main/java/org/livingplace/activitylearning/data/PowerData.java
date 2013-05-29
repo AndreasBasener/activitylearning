@@ -10,6 +10,7 @@ public class PowerData extends Data{
 	
 	public PowerData(String data)
 	{
+		super();
 		String strarr[] = data.split(";");
 		time = Long.valueOf(strarr[0]);
 		id = PowerID.valueOf(strarr[1]);
@@ -18,13 +19,40 @@ public class PowerData extends Data{
 	}
 	
 	public double distanceTo(IData data) {
-		// TODO Auto-generated method stub
-		return 0;
+		if(data == this)
+			return 0;
+		if(data instanceof PowerData)
+		{
+			PowerData s = (PowerData) data;
+			if(this.equals(s))
+				return 0;
+			else
+				return 1;
+		}
+		return -1;
 	}
 	
-	public String toShortString() {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean equals(Object o)
+	{
+		if(o == null)
+			return false;
+		if(!(o instanceof PowerData))
+			return false;
+		
+		PowerData data = (PowerData) o;
+		
+		return id.equals(data.id) &&
+				state.equals(data.state);
+	}
+
+	public String toShortString()
+	{
+		return id + ":" + state;
+	}
+	
+	public String toString()
+	{
+		return "ID: " + id + " State: " + state;
 	}
 
 	/**

@@ -7,6 +7,7 @@ public class DoorData extends Data{
 	
 	public DoorData(String data)
 	{
+		super();
 		String strarr[] = data.split(";");
 		time = Long.valueOf(strarr[0]);
 		name =strarr[1];
@@ -15,13 +16,40 @@ public class DoorData extends Data{
 	}
 	
 	public double distanceTo(IData data) {
-		// TODO Auto-generated method stub
-		return 0;
+		if(data == this)
+			return 0;
+		if(data instanceof DoorData)
+		{
+			DoorData s = (DoorData) data;
+			if(this.equals(s))
+				return 0;
+			else
+				return 1;
+		}
+		return -1;
+	}
+	
+	public boolean equals(Object o)
+	{
+		if(o == null)
+			return false;
+		if(!(o instanceof DoorData))
+			return false;
+		
+		DoorData data = (DoorData) o;
+		
+		return name.equals(data.name) &&
+				description.equals(data.description);
 	}
 
-	public String toShortString() {
-		// TODO Auto-generated method stub
-		return null;
+	public String toShortString()
+	{
+		return name + ":" + description;
+	}
+	
+	public String toString()
+	{
+		return "Name: " + name + " Description: " + description;
 	}
 
 	/**

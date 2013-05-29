@@ -1,29 +1,57 @@
 package org.livingplace.activitylearning.data;
 
-import org.livingplace.scriptsimulator.script.entry.BlindsEntry.BlindsAction;
 import org.livingplace.scriptsimulator.script.entry.BlindsEntry.BlindsID;
+import org.livingplace.scriptsimulator.script.entry.BlindsEntry.BlindsState;
 
 public class BlindsData extends Data{
 
 	private BlindsID id;
-	private BlindsAction action;
+	private BlindsState state;
 	
 	public BlindsData(String data)
 	{
+		super();
 		String strarr[] = data.split(";");
 		time = Long.valueOf(strarr[0]);
 		id = BlindsID.valueOf(strarr[1]);
-		action = BlindsAction.valueOf(strarr[2]);
+		state = BlindsState.valueOf(strarr[2]);
 	}
 	
 	public double distanceTo(IData data) {
-		// TODO Auto-generated method stub
-		return 0;
+		if(data == this)
+			return 0;
+		if(data instanceof BlindsData)
+		{
+			BlindsData s = (BlindsData) data;
+			if(this.equals(s))
+				return 0;
+			else
+				return 1;
+		}
+		return -1;
+	}
+	
+	public boolean equals(Object o)
+	{
+		if(o == null)
+			return false;
+		if(!(o instanceof BlindsData))
+			return false;
+		
+		BlindsData data = (BlindsData) o;
+		
+		return id.equals(data.id) &&
+				state.equals(data.state);
 	}
 
-	public String toShortString() {
-		// TODO Auto-generated method stub
-		return null;
+	public String toShortString()
+	{
+		return id + ":" + state;
+	}
+	
+	public String toString()
+	{
+		return "ID: " + id + " State: " + state;
 	}
 
 	/**
@@ -41,17 +69,17 @@ public class BlindsData extends Data{
 	}
 
 	/**
-	 * @return the action
+	 * @return the state
 	 */
-	public BlindsAction getAction() {
-		return action;
+	public BlindsState getState() {
+		return state;
 	}
 
 	/**
-	 * @param action the action to set
+	 * @param state the state to set
 	 */
-	public void setAction(BlindsAction action) {
-		this.action = action;
+	public void setState(BlindsState state) {
+		this.state = state;
 	}
 
 }

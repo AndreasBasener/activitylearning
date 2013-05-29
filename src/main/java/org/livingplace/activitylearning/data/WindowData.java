@@ -10,6 +10,7 @@ public class WindowData extends Data{
 	
 	public WindowData(String data)
 	{
+		super();
 		String strarr[] = data.split(";");
 		time = Long.valueOf(strarr[0]);
 		id = WindowID.valueOf(strarr[1]);
@@ -17,13 +18,40 @@ public class WindowData extends Data{
 	}
 	
 	public double distanceTo(IData data) {
-		// TODO Auto-generated method stub
-		return 0;
+		if(data == this)
+			return 0;
+		if(data instanceof WindowData)
+		{
+			WindowData s = (WindowData) data;
+			if(this.equals(s))
+				return 0;
+			else
+				return 1;
+		}
+		return -1;
+	}
+	
+	public boolean equals(Object o)
+	{
+		if(o == null)
+			return false;
+		if(!(o instanceof WindowData))
+			return false;
+		
+		WindowData data = (WindowData) o;
+		
+		return id.equals(data.id) &&
+				action.equals(data.action);
 	}
 
-	public String toShortString() {
-		// TODO Auto-generated method stub
-		return null;
+	public String toShortString()
+	{
+		return id + ":" + action;
+	}
+	
+	public String toString()
+	{
+		return "ID: " + id + " Action: " + action;
 	}
 
 	/**

@@ -10,6 +10,7 @@ public class WaterData extends Data{
 	
 	public WaterData(String data)
 	{
+		super();
 		String strarr[] = data.split(";");
 		time = Long.valueOf(strarr[0]);
 		id = WaterID.valueOf(strarr[1]);
@@ -17,13 +18,40 @@ public class WaterData extends Data{
 	}
 	
 	public double distanceTo(IData data) {
-		// TODO Auto-generated method stub
-		return 0;
+		if(data == this)
+			return 0;
+		if(data instanceof WaterData)
+		{
+			WaterData s = (WaterData) data;
+			if(this.equals(s))
+				return 0;
+			else
+				return 1;
+		}
+		return -1;
+	}
+	
+	public boolean equals(Object o)
+	{
+		if(o == null)
+			return false;
+		if(!(o instanceof WaterData))
+			return false;
+		
+		WaterData data = (WaterData) o;
+		
+		return id.equals(data.id) &&
+				state.equals(data.state);
 	}
 
-	public String toShortString() {
-		// TODO Auto-generated method stub
-		return null;
+	public String toShortString()
+	{
+		return id + ":" + state;
+	}
+	
+	public String toString()
+	{
+		return "ID: " + id + " State: " + state;
 	}
 
 	/**

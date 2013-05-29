@@ -6,12 +6,17 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import org.livingplace.activitylearning.cluster.Cluster;
@@ -51,6 +56,8 @@ public class XYPanel extends JPanel
 	
 	private List<Cluster> cluster;
 	private List<PatternCluster> patternCluster;
+	
+	private Image floorplan;
 
 	public XYPanel(int width, int height, int xScale, int yScale) 
 	{
@@ -65,18 +72,22 @@ public class XYPanel extends JPanel
 		this.patternCluster = new ArrayList<PatternCluster>();
 		
 		this.random = new Random();
+		
+		this.floorplan = Toolkit.getDefaultToolkit().getImage("data\\LPGrundriss.png");
 	}
 
 	@Override
 	public void paintComponent(Graphics g) 
 	{
 		super.paintComponent(g);
+		int cCount = 0;
 
 		Graphics2D g2d = (Graphics2D) g;
 
 		Dimension d = getSize();
 		Insets i = getInsets();
 
+		
 		//Länge der Achsen berechnen
 		int xScaleLength = d.width - i.left - i.right - offset * 2;
 		int yScaleLength = d.height - i.bottom - i.top - offset * 2;
@@ -85,32 +96,40 @@ public class XYPanel extends JPanel
 		int xSteps = xScaleLength / xScale;
 		int ySteps = yScaleLength / yScale;
 
+		g2d.drawImage(floorplan, 
+						offset, offset, d.width - offset, d.height - offset, 
+						0, 0, floorplan.getWidth(this), floorplan.getHeight(this), 
+						this);
+		
 		g2d.setStroke(new BasicStroke(lineStroke));
 		
 		// Ordinate, Abzisse und Achsenbeschriftung zeichnen
-		g2d.drawLine(offset, offset, offset + xScaleLength, offset);
+		g2d.drawLine(offset, offset + yScaleLength, offset + xScaleLength, offset + yScaleLength);
 		g2d.drawLine(offset, offset, offset, offset + yScaleLength);
 		
-		g2d.drawString("X", offset + xScaleLength + 10, offset);
-		g2d.drawString("Y", offset, offset + yScaleLength + 20);
+		g2d.drawString("X", offset + xScaleLength + 10, offset + yScaleLength + 7);
+		g2d.drawString("Y", offset, offset);
 		
 		//Nullpunkt zeichnen
-		g2d.drawString("0", offset - 15, offset - 7);
+		g2d.drawString("0", offset - 7, offset + yScaleLength + 10);
 
 		//Abzisse beschriften
 		for (int j = 1; j <= xScale; j++) 
 		{
 			//Achsensbschnitte und -beschriftung zeichnen
-			g2d.drawLine(xSteps * j + offset, offset - 5, xSteps * j + offset, offset);
-			g2d.drawString(j + "", offset + j * xSteps, offset - 7);
+			g2d.drawLine(xSteps * j + offset, offset + 5 + yScaleLength, xSteps * j + offset, offset + yScaleLength);
+			g2d.drawString(j + "", offset + j * xSteps - 7, offset + yScaleLength + 20);
 			
 		}
 		//Ordinate beschriften
 		for (int j = 1; j <= yScale; j++) 
 		{
 			//Achsensbschnitte und -beschriftung zeichnen
-			g2d.drawLine(offset - 5, ySteps * j + offset, offset, ySteps * j + offset);
-			g2d.drawString(j + "", offset - 15, offset + j * ySteps);
+			int y = d.height - offset - (ySteps * j);
+			g2d.drawLine(offset - 5, y, offset, y);
+			g2d.drawString(j + "", offset - 20, y);
+//			g2d.drawLine(offset - 5, ySteps * j + offset, offset, ySteps * j + offset);
+//			g2d.drawString(j + "", offset - 20, offset + (yScale - j + 1) * ySteps);
 			
 		}
 
@@ -154,7 +173,62 @@ public class XYPanel extends JPanel
 			g2d.setColor(Color.GREEN);
 			g2d.drawLine((int)x + offset,(int) y + offset,(int) x + offset,(int) y + offset);
 		}
-		int cCount = 0;
+		
+		for(PatternCluster pc: patternCluster)
+		{
+			if (pc.getPatternList().size() < 3)
+				continue;
+//			g2d.setColor(new Color(random.nextInt()));
+			g2d.setStroke(new BasicStroke(pointStroke));
+			switch (cCount) {
+			case 0:
+				g2d.setColor(Color.RED);
+				break;
+			case 1:
+				g2d.setColor(Color.BLUE);
+				break;
+			case 2:
+				g2d.setColor(Color.GREEN);
+				break;
+			case 3:
+				g2d.setColor(Color.YELLOW);
+				break;
+			case 4:
+				g2d.setColor(Color.GRAY);
+				break;
+			case 5:
+				g2d.setColor(Color.ORANGE);
+				break;
+			case 6:
+				g2d.setColor(Color.BLACK);
+				break;
+			case 7:
+				g2d.setColor(Color.CYAN);
+				break;
+			case 8:
+				g2d.setColor(Color.LIGHT_GRAY);
+				break;
+			default:
+				g2d.setColor(new Color(random.nextInt()));
+				break;
+			}
+			for(Pattern p: pc.getPatternList())
+			{
+				List<IData> plist = p.getSequence().getDataSequence();
+				for(IData data: plist)
+				{
+					if (data instanceof PositionData)
+					{
+						PositionData pos = (PositionData) data;
+						double y = d.getHeight() - pos.getY() * ySteps - offset;
+						g2d.drawLine((int) (pos.getX() * xSteps) + offset, (int) y, 
+								(int) (pos.getX() * xSteps) + offset, (int) y);
+					}
+				}
+			}
+			cCount++;
+		}
+
 		for(Cluster c : cluster)
 		{
 //			Color color = new Color(random.nextInt());
@@ -199,48 +273,6 @@ public class XYPanel extends JPanel
 						(int) (p.getX() * xSteps) + offset, (int) (p.getY() * ySteps) + offset);
 			}
 			
-			cCount++;
-		}
-		for(PatternCluster pc: patternCluster)
-		{
-//			g2d.setColor(new Color(random.nextInt()));
-			g2d.setStroke(new BasicStroke(pointStroke));
-			switch (cCount) {
-			case 0:
-				g2d.setColor(Color.RED);
-				break;
-			case 1:
-				g2d.setColor(Color.BLUE);
-				break;
-			case 2:
-				g2d.setColor(Color.GREEN);
-				break;
-			case 3:
-				g2d.setColor(Color.YELLOW);
-				break;
-			case 4:
-				g2d.setColor(Color.GRAY);
-				break;
-			case 5:
-				g2d.setColor(Color.ORANGE);
-				break;
-			default:
-				g2d.setColor(new Color(random.nextInt()));
-				break;
-			}
-			for(Pattern p: pc.getPatternList())
-			{
-				List<IData> plist = p.getSequence().getDataSequence();
-				for(IData data: plist)
-				{
-					if (data instanceof PositionData)
-					{
-						PositionData pos = (PositionData) data;
-						g2d.drawLine((int) (pos.getX() * xSteps) + offset, (int) (pos.getY() * ySteps) + offset, 
-								(int) (pos.getX() * xSteps) + offset, (int) (pos.getY() * ySteps) + offset);
-					}
-				}
-			}
 			cCount++;
 		}
 		setBackground(Color.WHITE);

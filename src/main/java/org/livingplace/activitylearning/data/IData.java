@@ -9,6 +9,7 @@ package org.livingplace.activitylearning.data;
 public interface IData {
 
 	public double distanceTo(IData data);
+	public String toShortString();
 	
 	public long getTime();
 	public void setTime(long time);
@@ -16,5 +17,4 @@ public interface IData {
 	public Copy getCopy();
 	public void setCopy(Copy copy);
 	
-	public String toShortString();
 }

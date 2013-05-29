@@ -1,7 +1,5 @@
 package org.livingplace.activitylearning.data;
 
-import org.livingplace.activitylearning.Copy;
-import org.livingplace.activitylearning.FunctionalSpace;
 import org.livingplace.scriptsimulator.Point3D;
 
 public class PositionData implements IData{
@@ -120,6 +118,7 @@ public class PositionData implements IData{
 		this.y = y;
 	}
 	
+	@Deprecated
 	public static int getValueSize()
 	{
 		return 3;

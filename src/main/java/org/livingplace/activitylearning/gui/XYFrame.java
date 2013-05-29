@@ -6,8 +6,8 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-import org.livingplace.activitylearning.PatternCluster;
 import org.livingplace.activitylearning.cluster.Cluster;
+import org.livingplace.activitylearning.pattern.PatternCluster;
 import org.livingplace.scriptsimulator.Point3D;
 
 public class XYFrame extends JFrame{
@@ -16,12 +16,6 @@ public class XYFrame extends JFrame{
 	 * 
 	 */
 	private static final long serialVersionUID = 8377287475390841404L;
-
-	private int width;
-	private int height;
-	
-	private int xScale;
-	private int yScale;
 	
 	private XYPanel panel;
 	
@@ -31,11 +25,6 @@ public class XYFrame extends JFrame{
 	}
 	public XYFrame(int width, int height, int xScale, int yScale)
 	{
-		this.width = width;
-		this.height = height;
-		this.xScale = xScale;
-		this.yScale = yScale;
-		
 		panel = new XYPanel(width, height, xScale, yScale);
 		add(panel);
 		

@@ -3,8 +3,8 @@ package org.livingplace.activitylearning.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.livingplace.activitylearning.PatternCluster;
 import org.livingplace.activitylearning.cluster.Cluster;
+import org.livingplace.activitylearning.pattern.PatternCluster;
 import org.livingplace.scriptsimulator.Point3D;
 
 public class GUI {

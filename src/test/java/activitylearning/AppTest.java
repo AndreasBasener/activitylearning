@@ -1,8 +1,8 @@
 package activitylearning;
 
-import org.livingplace.activitylearning.Pattern;
-import org.livingplace.activitylearning.Sequence;
 import org.livingplace.activitylearning.data.PositionData;
+import org.livingplace.activitylearning.pattern.Pattern;
+import org.livingplace.activitylearning.pattern.Sequence;
 import org.livingplace.scriptsimulator.Point3D;
 
 import junit.framework.Test;

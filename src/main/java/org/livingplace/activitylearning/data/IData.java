@@ -1,6 +1,5 @@
 package org.livingplace.activitylearning.data;
 
-import org.livingplace.activitylearning.Copy;
 
 /**
  * 

@@ -8,8 +8,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.livingplace.activitylearning.data.Copy;
 import org.livingplace.activitylearning.data.IData;
 import org.livingplace.activitylearning.data.PositionData;
+import org.livingplace.activitylearning.data.StorageData;
+import org.livingplace.activitylearning.pattern.Pattern;
+import org.livingplace.activitylearning.pattern.PatternCluster;
+import org.livingplace.activitylearning.pattern.Sequence;
 
 public class KDD {
 	
@@ -360,8 +365,18 @@ public class KDD {
 			try {
 				while((line = br.readLine())!=null)
 				{
-					positionList.add(new PositionData(line));
-					dataList.add(new PositionData(line));
+//					positionList.add(new PositionData(line));
+					String[] strarr = line.split(";", 2);
+					if(strarr.length == 2)
+					{
+						String str = strarr[0];
+						String data = strarr[1];
+						if(str.equals("Ubisense"))
+							dataList.add(new PositionData(data));
+						else if(str.equals("Storage"))
+							dataList.add(new StorageData(data));
+					}
+//					dataList.add(new PositionData(line));
 //					System.out.println(line);
 				}
 			} catch (IOException e) {
@@ -370,6 +385,10 @@ public class KDD {
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+		}
+		for(IData d: dataList)
+		{
+			System.out.println(d);
 		}
 	}
 

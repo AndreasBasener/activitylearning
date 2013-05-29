@@ -1,7 +1,9 @@
-package org.livingplace.activitylearning;
+package org.livingplace.activitylearning.pattern;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.livingplace.activitylearning.Helper;
 
 public class PatternCluster {
 

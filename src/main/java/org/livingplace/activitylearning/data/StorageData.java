@@ -1,22 +1,33 @@
 package org.livingplace.activitylearning.data;
 
-import org.livingplace.activitylearning.Copy;
 import org.livingplace.scriptsimulator.script.entry.StorageEntry.StorageAction;
 import org.livingplace.scriptsimulator.script.entry.StorageEntry.StorageID;
 
 public class StorageData implements IData{
 
-	private long time;
-	private Copy copy;
+	private long time = -1;
+	private Copy copy = Copy.FALSE;
 	
-	private StorageID id;
+	private StorageID id = null;
 	
-	private StorageAction action;
+	private StorageAction action = null;
 	
 	public StorageData(StorageID id, StorageAction action)
 	{
 		this.id = id;
 		this.action = action;
+	}
+	
+	public StorageData(String data)
+	{
+		String strarr[] = data.split(";");
+		if(strarr.length != 3)
+			return;
+		
+		time = Long.valueOf(strarr[0]);
+		id = StorageID.valueOf(strarr[1]);
+		action = StorageAction.valueOf(strarr[2]);
+		
 	}
 	
 	/**
@@ -55,7 +66,7 @@ public class StorageData implements IData{
 
 	public String toString()
 	{
-		return "ID: " + id + " Action: " + action;
+		return "Time: " + time + " ID: " + id + " Action: " + action;
 	}
 	
 	public String toShortString()

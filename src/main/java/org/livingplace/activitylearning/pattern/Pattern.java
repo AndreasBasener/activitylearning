@@ -1,8 +1,9 @@
-package org.livingplace.activitylearning;
+package org.livingplace.activitylearning.pattern;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.livingplace.activitylearning.Helper;
 import org.livingplace.activitylearning.data.IData;
 
 public class Pattern implements Comparable<Pattern>{

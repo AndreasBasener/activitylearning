@@ -14,11 +14,11 @@ import java.util.Random;
 
 import javax.swing.JPanel;
 
-import org.livingplace.activitylearning.Pattern;
-import org.livingplace.activitylearning.PatternCluster;
 import org.livingplace.activitylearning.cluster.Cluster;
 import org.livingplace.activitylearning.data.IData;
 import org.livingplace.activitylearning.data.PositionData;
+import org.livingplace.activitylearning.pattern.Pattern;
+import org.livingplace.activitylearning.pattern.PatternCluster;
 import org.livingplace.scriptsimulator.Point3D;
 /**
  * 

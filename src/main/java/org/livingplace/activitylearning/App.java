@@ -1,13 +1,6 @@
 package org.livingplace.activitylearning;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.livingplace.activitylearning.data.PositionData;
 import org.livingplace.activitylearning.gui.GUI;
-import org.livingplace.activitylearning.pattern.Pattern;
-import org.livingplace.activitylearning.pattern.PatternCluster;
-import org.livingplace.activitylearning.pattern.Sequence;
 
 
 /**

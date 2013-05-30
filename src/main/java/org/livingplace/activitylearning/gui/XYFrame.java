@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-import org.livingplace.activitylearning.cluster.Cluster;
 import org.livingplace.activitylearning.pattern.PatternCluster;
 import org.livingplace.scriptsimulator.Point3D;
 
@@ -51,10 +50,6 @@ public class XYFrame extends JFrame{
 			panel.addPoint(p);
 		}
 		this.repaint();
-	}
-	public void setCluster(List<Cluster> cluster)
-	{
-		panel.setCluster(cluster);
 	}
 	
 	public void setPatternClusterList(List<PatternCluster> patternCluster)

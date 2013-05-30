@@ -10,16 +10,12 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import org.livingplace.activitylearning.cluster.Cluster;
 import org.livingplace.activitylearning.data.IData;
 import org.livingplace.activitylearning.data.PositionData;
 import org.livingplace.activitylearning.pattern.Pattern;
@@ -53,8 +49,7 @@ public class XYPanel extends JPanel
 	private List<Point3D> point3DList;
 	
 	private Random random;
-	
-	private List<Cluster> cluster;
+
 	private List<PatternCluster> patternCluster;
 	
 	private Image floorplan;
@@ -68,7 +63,6 @@ public class XYPanel extends JPanel
 
 		this.point2DList = new ArrayList<Point2D>();
 		this.point3DList = new ArrayList<Point3D>();
-		this.cluster = new ArrayList<Cluster>();
 		this.patternCluster = new ArrayList<PatternCluster>();
 		
 		this.random = new Random();
@@ -228,53 +222,7 @@ public class XYPanel extends JPanel
 			}
 			cCount++;
 		}
-
-		for(Cluster c : cluster)
-		{
-//			Color color = new Color(random.nextInt());
-			List<Point3D> l = c.getClusterPoints();
-			Point3D centroid = c.getCentroid();
-
-			g2d.setStroke(new BasicStroke(centroidStroke));
-			
-			switch (cCount) {
-			case 0:
-				g2d.setColor(Color.RED);
-				break;
-			case 1:
-				g2d.setColor(Color.BLUE);
-				break;
-			case 2:
-				g2d.setColor(Color.GREEN);
-				break;
-			case 3:
-				g2d.setColor(Color.YELLOW);
-				break;
-			case 4:
-				g2d.setColor(Color.GRAY);
-				break;
-			case 5:
-				g2d.setColor(Color.ORANGE);
-				break;
-			default:
-				g2d.setColor(new Color(random.nextInt()));
-				break;
-			}
-//			g2d.setColor(color);
-			
-			g2d.drawLine((int) (centroid.getX() * xSteps) + offset, (int) (centroid.getY() * ySteps) + offset, 
-					(int) (centroid.getX() * xSteps) + offset, (int) (centroid.getY() * ySteps) + offset);
-			
-			for(Point3D p : l)
-			{
-				g2d.setStroke(new BasicStroke(pointStroke));
-//				g2d.setColor(color);
-				g2d.drawLine((int) (p.getX() * xSteps) + offset, (int) (p.getY() * ySteps) + offset, 
-						(int) (p.getX() * xSteps) + offset, (int) (p.getY() * ySteps) + offset);
-			}
-			
-			cCount++;
-		}
+	
 		setBackground(Color.WHITE);
 	}
 
@@ -285,14 +233,6 @@ public class XYPanel extends JPanel
 	public void addPoint(Point3D point)
 	{
 		point3DList.add(point);
-	}
-
-	public List<Cluster> getCluster() {
-		return cluster;
-	}
-
-	public void setCluster(List<Cluster> cluster) {
-		this.cluster = cluster;
 	}
 	
 	public void setPatternCluster(List<PatternCluster> patternCluster)

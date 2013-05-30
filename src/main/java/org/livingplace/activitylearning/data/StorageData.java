@@ -42,13 +42,24 @@ public class StorageData implements IData{
 			return 0;
 		if(data instanceof StorageData)
 		{
-			StorageData s = (StorageData) data;
-			if(this.equals(s))
-				return 0;
-			else
+			StorageData d = (StorageData) data;
+			if(id.equals(d.id))
+			{
+				if(action.equals(d.action))
+				{
+					return 0;
+				}
+				else
+				{
+					return 0.5;
+				}
+			}
+			else 
+			{
 				return 1;
+			}
 		}
-		return -1;
+		return 1;
 	}
 	
 	public boolean equals(Object o)

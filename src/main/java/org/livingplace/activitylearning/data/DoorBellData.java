@@ -19,13 +19,24 @@ public class DoorBellData extends Data{
 			return 0;
 		if(data instanceof DoorBellData)
 		{
-			DoorBellData s = (DoorBellData) data;
-			if(this.equals(s))
-				return 0;
+			DoorBellData d = (DoorBellData) data;
+			if(name.equals(d.name))
+			{
+				if(description.equals(d.description))
+				{
+					return 0;
+				}
+				else
+				{
+					return 0.5;
+				}
+			}
 			else
+			{
 				return 1;
+			}
 		}
-		return -1;
+		return 1;
 	}
 	
 	public boolean equals(Object o)

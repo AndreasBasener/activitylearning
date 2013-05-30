@@ -23,13 +23,24 @@ public class PowerData extends Data{
 			return 0;
 		if(data instanceof PowerData)
 		{
-			PowerData s = (PowerData) data;
-			if(this.equals(s))
-				return 0;
+			PowerData d = (PowerData) data;
+			if(id.equals(d.id))
+			{
+				if(state.equals(d.state))
+				{
+					return 0;
+				}
+				else
+				{
+					return 0.5;
+				}
+			}
 			else
+			{
 				return 1;
+			}
 		}
-		return -1;
+		return 1;
 	}
 	
 	public boolean equals(Object o)

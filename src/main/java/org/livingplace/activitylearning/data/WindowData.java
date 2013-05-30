@@ -22,13 +22,24 @@ public class WindowData extends Data{
 			return 0;
 		if(data instanceof WindowData)
 		{
-			WindowData s = (WindowData) data;
-			if(this.equals(s))
-				return 0;
+			WindowData d = (WindowData) data;
+			if(id.equals(d.id))
+			{
+				if(action.equals(d.action))
+				{
+					return 0;
+				}
+				else
+				{
+					return 0.5;
+				}
+			}
 			else
+			{
 				return 1;
+			}
 		}
-		return -1;
+		return 1;
 	}
 	
 	public boolean equals(Object o)

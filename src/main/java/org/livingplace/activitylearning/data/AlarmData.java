@@ -14,18 +14,41 @@ public class AlarmData  extends Data{
 		description = strarr[2];
 	}
 
+	/**
+	 * Berechnet die Distanz zwischen diesem <code>AlarmData</code>-Objekts und data.
+	 * Wenn <code>name</code> und <code>description</code> gleich sind, dann wird 0 zurückgegeben,
+	 * wenn die namen Überinstimmen, aber die disriptions verschieden sind, wird 0.5 zurckgegeben.
+	 * Bei Verschiedenen Objekten wird 1 zurückgegeben. </br>
+	 * Ist <code>data</code> keine Instanz von <code>Alarmdata</code> wird -1 zurückgegeben.
+	 * 
+	 * @param data das zu vergleichende Objekt
+	 * @return Distanz zum übergeben Objekt.
+	 */
 	public double distanceTo(IData data) {
-		if(data == this)
+		if(data == this) // data ist this
 			return 0;
+		
 		if(data instanceof AlarmData)
 		{
-			AlarmData s = (AlarmData) data;
-			if(this.equals(s))
-				return 0;
-			else
+			AlarmData d = (AlarmData) data;
+			
+			if(name.equals(d.name)) // beide namen sind gleich
+			{
+				if(description.equals(d.description)) // beide name und descriptions sind gleich
+				{
+					return 0;
+				}
+				else // descriptions sind unterschiedlich, aber name sind gleich
+				{
+					return 0.5;
+				}
+			}
+			else // beide namen sind unterschiedlich
+			{
 				return 1;
+			}
 		}
-		return -1;
+		return 1; // data ist keine Instanz von AlarmData
 	}
 	
 	public boolean equals(Object o)

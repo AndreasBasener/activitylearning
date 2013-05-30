@@ -1,5 +1,6 @@
 package org.livingplace.activitylearning.data;
 
+import org.livingplace.activitylearning.Helper;
 import org.livingplace.scriptsimulator.Point3D;
 
 public class PositionData implements IData{
@@ -76,9 +77,10 @@ public class PositionData implements IData{
 		if (data instanceof PositionData)
 		{
 			PositionData p = (PositionData) data;
-			return euclidianDistance(p);
+//			return euclidianDistance(p);
+			return euclidianDistance(p) / Helper.MAX_DIAGONAL;
 		}
-		return -1;
+		return 1;
 	}
 	
 	/**

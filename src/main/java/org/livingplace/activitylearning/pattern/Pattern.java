@@ -156,47 +156,89 @@ public class Pattern implements Comparable<Pattern>{
 	
 	public double distanceTo(Pattern p)
 	{
-		int overlaps = 0;
-		int size1 = this.getSequence().getDataSequence().size();
-		int size2 = p.getSequence().getDataSequence().size();
-		int maxsize = 0;
-		double sim = 0;
-		double mean1 = this.meantime;
-		double mean2 = p.getMeantime();
-		double mean = 0;
+		Sequence s1 = sequence;
+		Sequence s2 = p.getSequence();
 		
-		if(mean1 > mean2)
-			mean = mean2 / mean1;
-		else
-			mean = mean1 / mean2;
-
-		for(int i = 0; i < size1 && i < size2; i++)
+		int size1 = s1.getDataSequence().size();
+		int size2 = s2.getDataSequence().size();
+		
+		int sizediff = size1 - size2; 
+		if(sizediff < 0)
 		{
-			IData p1 = this.getSequence().getDataSequence().get(i);
-			IData p2 = p.getSequence().getDataSequence().get(i);
-			if(p1.equals(p2))
-				overlaps++;
+			Sequence temp = s1;
+			int temps = size1;
+			s1 = s2;
+			size1 = 2;
+			s2 = temp;
+			size2 = temps;
+			sizediff *= -1;
 		}
 		
-		if(size1 > size2)
+		double dist[] = new double[sizediff + 1];
+		for(int i = 0; i <= sizediff; i++)
 		{
-//			sim = (double)size2 / (double)size1;
-			maxsize = size1;
-		}
-		else
-		{
-//			sim = (double)size1 / (double)size2;
-			maxsize = size2;
+			for(int j = 0; j < size2; j++)
+			{
+				dist[i] += s1.getDataSequence().get(j + i).distanceTo(s2.getDataSequence().get(j));
+			}
 		}
 		
-		sim = (double) overlaps / (double) maxsize;
-
-		sim *= 1 - Helper.MEAN_OVERLAP_RATIO;
+		double mindist = Double.MAX_VALUE;
+		for(double d: dist)
+		{
+			if(d < mindist)
+			{
+				mindist = d;
+			}
+		}
 		
-		sim += mean * Helper.MEAN_OVERLAP_RATIO;
 		
-		return sim;
+		return mindist;
 	}
+	
+//	public double distanceTo(Pattern p)
+//	{
+//		int overlaps = 0;
+//		int size1 = this.getSequence().getDataSequence().size();
+//		int size2 = p.getSequence().getDataSequence().size();
+//		int maxsize = 0;
+//		double sim = 0;
+//		double mean1 = this.meantime;
+//		double mean2 = p.getMeantime();
+//		double mean = 0;
+//		
+//		if(mean1 > mean2)
+//			mean = mean2 / mean1;
+//		else
+//			mean = mean1 / mean2;
+//
+//		for(int i = 0; i < size1 && i < size2; i++)
+//		{
+//			IData p1 = this.getSequence().getDataSequence().get(i);
+//			IData p2 = p.getSequence().getDataSequence().get(i);
+//			if(p1.equals(p2))
+//				overlaps++;
+//		}
+//		
+//		if(size1 > size2)
+//		{
+////			sim = (double)size2 / (double)size1;
+//			maxsize = size1;
+//		}
+//		else
+//		{
+////			sim = (double)size1 / (double)size2;
+//			maxsize = size2;
+//		}
+//		
+//		sim = (double) overlaps / (double) maxsize;
+//
+//		sim *= 1 - Helper.MEAN_OVERLAP_RATIO;
+//		
+//		sim += mean * Helper.MEAN_OVERLAP_RATIO;
+//		
+//		return sim;
+//	}
 	
 	public boolean containsPatternSequence(Pattern pattern)
 	{

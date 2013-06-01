@@ -30,6 +30,10 @@ public class GUI {
 	{
 		graph.addPoint(point);
 	}
+	public void setPoint3D(List<Point3D> list)
+	{
+		graph.addPoints(list);
+	}
 	
 	public void addPatternCluster(PatternCluster patternCluster)
 	{

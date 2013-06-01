@@ -67,7 +67,7 @@ public class XYPanel extends JPanel
 		
 		this.random = new Random();
 		
-		this.floorplan = Toolkit.getDefaultToolkit().getImage("data\\LPGrundriss.png");
+		this.floorplan = Toolkit.getDefaultToolkit().getImage("data\\LPGrundriss2.png");
 	}
 
 	@Override
@@ -165,7 +165,8 @@ public class XYPanel extends JPanel
 			
 
 			g2d.setColor(Color.GREEN);
-			g2d.drawLine((int)x + offset,(int) y + offset,(int) x + offset,(int) y + offset);
+			double y2 = d.getHeight() - offset - y;
+			g2d.drawLine((int)x + offset, (int) y2, (int) x + offset, (int) y2);
 		}
 		
 		for(PatternCluster pc: patternCluster)

@@ -12,15 +12,15 @@ import org.livingplace.activitylearning.data.*;
 import org.livingplace.activitylearning.pattern.Pattern;
 import org.livingplace.activitylearning.pattern.PatternCluster;
 import org.livingplace.activitylearning.pattern.Sequence;
+import org.livingplace.scriptsimulator.Point3D;
 
 public class KDD {
 	
 	private String filename;
 	
-	private List<IData> dataList;
+	private List<Point3D> dataPoints;
 	
-	@Deprecated
-	private List<PositionData> positionList;
+	private List<IData> dataList;
 	
 	private List<Pattern> patternList;
 	
@@ -38,21 +38,16 @@ public class KDD {
 		this.clusterList = new ArrayList<PatternCluster>();
 		this.discoveredPattern = new ArrayList<Pattern>();
 		this.dataList = new ArrayList<IData>();
+		this.dataPoints = new ArrayList<Point3D>();
 	}
 	
 	public KDD(String filename)
 	{
 		this();
 		this.filename = filename;
-		this.positionList = new ArrayList<PositionData>();
 		
 		parseFile();
 		
-	}
-	public KDD(List<PositionData> data)
-	{
-		this();
-		this.positionList = data;
 	}
 	
 	public void dokdd()
@@ -78,6 +73,7 @@ public class KDD {
 //			compressed = true;
 		} while(!compressed);
 
+		removeDuplicates();
 //		for(Pattern p: discoveredPattern)
 //			System.out.println(p);
 		clusterPattern();
@@ -282,12 +278,38 @@ public class KDD {
 		}
 		return true;
 	}
+	
+	private void removeDuplicates()
+	{
+		List<Pattern> list = new ArrayList<Pattern>();
+		for(Pattern dp: discoveredPattern)
+		{
+			boolean duplicate = false;
+			for(Pattern p: list)
+			{
+				if(dp.getSequence().equals(p.getSequence()))
+				{
+					duplicate = true;
+					break;
+				}
+			}
+			if(!duplicate)
+			{
+				list.add(dp);
+			}
+		}
+		discoveredPattern = list;
+	}
 
 	public void clusterPattern()
 	{
+//		for(Pattern p: discoveredPattern)
+//			System.out.println(p);
+		
 		for (Pattern p: discoveredPattern)
 		{
 			boolean contains = false;
+//			System.out.println(p);
 			for(PatternCluster pc: clusterList)
 			{
 				contains = pc.containsPattern(p);
@@ -298,20 +320,30 @@ public class KDD {
 				if(contains)
 					break;
 				
-				contains = pc.isSimilar(p);
-				if(contains)
+//				contains = pc.isSimilar(p);
+//				if(contains)
+//				{
+//					pc.addPattern(p);
+//					break;
+//				}
+				
+				double sim = pc.distanceToCentroid(p);
+				if(sim <= Helper.MIN_SIMILAR)
 				{
+//					System.out.println(sim);
 					pc.addPattern(p);
+					contains = true;
 					break;
 				}
 			}
 			if(!contains)
 			{
-				PatternCluster cluster = new PatternCluster();
-				cluster.addPattern(p);
+				PatternCluster cluster = new PatternCluster(p);
+//				cluster.addPattern(p);
 				clusterList.add(cluster);
 			}
 		}
+		System.out.println("Hier");
 	}
 	
 	private void compressCluster()
@@ -379,7 +411,11 @@ public class KDD {
 						else if(str.equals("Door"))
 							dataList.add(new DoorData(data));
 						else if(str.equals("Ubisense"))
-							dataList.add(new PositionData(data));
+						{
+							PositionData pd = new PositionData(data);
+							dataList.add(pd);
+							addDataPoint(new Point3D(pd.getX(), pd.getY(), 0));
+						}
 						else if(str.equals("Power"))
 							dataList.add(new PowerData(data));
 						else if(str.equals("Storage"))
@@ -418,18 +454,7 @@ public class KDD {
 	public void setSlidingWindow(SlidingWindow slidingWindow) {
 		this.slidingWindow = slidingWindow;
 	}
-	/**
-	 * @return the positionList
-	 */
-	public List<PositionData> getPositionList() {
-		return positionList;
-	}
-	/**
-	 * @param positionList the positionList to set
-	 */
-	public void setPositionList(List<PositionData> positionList) {
-		this.positionList = positionList;
-	}
+	
 	/**
 	 * @return the patternList
 	 */
@@ -455,5 +480,24 @@ public class KDD {
 	 */
 	public void setClusterList(List<PatternCluster> clusterList) {
 		this.clusterList = clusterList;
+	}
+
+	/**
+	 * @return the dataPoints
+	 */
+	public List<Point3D> getDataPoints() {
+		return dataPoints;
+	}
+
+	/**
+	 * @param dataPoints the dataPoints to set
+	 */
+	public void setDataPoints(List<Point3D> dataPoints) {
+		this.dataPoints = dataPoints;
+	}
+	
+	public void addDataPoint(Point3D point)
+	{
+		this.dataPoints.add(point);
 	}
 }

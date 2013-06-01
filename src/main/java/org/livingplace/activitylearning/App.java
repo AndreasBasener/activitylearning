@@ -20,7 +20,7 @@ public class App {
 		kdd.dokdd();
 		
 		gui.setPatternClusterList(kdd.getClusterList());
-		
+//		gui.setPoint3D(kdd.getDataPoints());
 		gui.repaint();
 //		System.out.println("Fertig");
 	}

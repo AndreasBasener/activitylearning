@@ -4,14 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.livingplace.activitylearning.data.IData;
-import org.livingplace.activitylearning.data.PositionData;
 
 public class Sequence {
-
-	@Deprecated
-	private List<PositionData> sequence;
-	@Deprecated
-	private List<PositionData> eventList;
 	
 	private int startIndex;
 	
@@ -20,7 +14,6 @@ public class Sequence {
 	
 	public Sequence()
 	{
-		this.sequence = new ArrayList<PositionData>();
 		this.dataSequence = new ArrayList<IData>();
 	}
 	
@@ -59,22 +52,9 @@ public class Sequence {
 	public Sequence(Sequence sequence)
 	{
 		this();
-		this.sequence.addAll(sequence.getSequence());
-		this.eventList = sequence.eventList;
 		this.dataSequence.addAll(sequence.dataSequence);
 		this.dataList = sequence.dataList;
 		this.startIndex = sequence.startIndex;
-	}
-	
-	@Deprecated
-	public void addElement(PositionData element)
-	{
-		this.sequence.add(element);
-	}
-	@Deprecated
-	public void addList(List<PositionData> list)
-	{
-		this.sequence.addAll(list);
 	}
 	
 	@Override
@@ -156,22 +136,6 @@ public class Sequence {
 			s += d.toShortString() + " ";
 		}
 		return s;
-	}
-	
-	/**
-	 * @return the sequence
-	 */
-	@Deprecated
-	public List<PositionData> getSequence() {
-		return sequence;
-	}
-
-	/**
-	 * @param sequence the sequence to set
-	 */
-	@Deprecated
-	public void setSequence(List<PositionData> sequence) {
-		this.sequence = sequence;
 	}
 
 	/**

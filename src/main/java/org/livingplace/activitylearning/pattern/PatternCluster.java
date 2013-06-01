@@ -6,6 +6,8 @@ import java.util.List;
 import org.livingplace.activitylearning.Helper;
 
 public class PatternCluster {
+	
+	private Pattern centroid;
 
 	private List<Pattern> patternList;
 	
@@ -14,25 +16,50 @@ public class PatternCluster {
 		this.patternList = new ArrayList<Pattern>();
 	}
 	
+	public PatternCluster(Pattern centroid)
+	{
+		this();
+		this.patternList.add(centroid);
+		this.centroid = centroid;
+	}
+	
 	public void addPattern(Pattern pattern)
 	{
 		this.patternList.add(pattern);
-	}
-
-	/**
-	 * @return the patternList
-	 */
-	public List<Pattern> getPatternList() {
-		return patternList;
-	}
-
-	/**
-	 * @param patternList the patternList to set
-	 */
-	public void setPatternList(List<Pattern> patternList) {
-		this.patternList = patternList;
+		calcNewCentroid();
 	}
 	
+	private void calcNewCentroid()
+	{
+		double meandist[] = new double[patternList.size()];
+		int index = 0;
+		for(Pattern p1: patternList)
+		{
+			for(Pattern p2: patternList)
+			{
+				meandist[index] += p1.distanceTo(p2);
+			}
+			meandist[index] /= patternList.size();
+			
+			index++;
+		}
+		
+		double smallest = Double.MAX_VALUE;
+		index = -1;
+		for(int i = 0; i < meandist.length; i++)
+		{
+			if(meandist[i] < smallest)
+			{
+				smallest = meandist[i];
+				index = i;
+			}
+		}
+		if(index != -1)
+		{
+			centroid = patternList.get(index);
+		}
+	}
+
 	public boolean containsPattern(Pattern pattern)
 	{
 		return patternList.contains(pattern);
@@ -60,6 +87,11 @@ public class PatternCluster {
 		return false;
 	}
 	
+	public double distanceToCentroid(Pattern pattern)
+	{
+		return centroid.distanceTo(pattern);
+	}
+	
 	public void merge(PatternCluster pc)
 	{
 		if (pc == null)
@@ -81,5 +113,33 @@ public class PatternCluster {
 			s += "Pattern: " + p + "\n";
 		return s;
 	}
+
+
+	/**
+	 * @return the patternList
+	 */
+	public List<Pattern> getPatternList() {
+		return patternList;
+	}
+
+	/**
+	 * @param patternList the patternList to set
+	 */
+	public void setPatternList(List<Pattern> patternList) {
+		this.patternList = patternList;
+	}
 	
+	/**
+	 * @return the centroid
+	 */
+	public Pattern getCentroid() {
+		return centroid;
+	}
+
+	/**
+	 * @param centroid the centroid to set
+	 */
+	public void setCentroid(Pattern centroid) {
+		this.centroid = centroid;
+	}
 }

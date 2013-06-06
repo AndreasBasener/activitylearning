@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.livingplace.activitylearning.data.IData;
+import org.livingplace.activitylearning.data.PositionData;
+import org.livingplace.scriptsimulator.Point3D;
 
 public class Sequence {
 	
@@ -16,22 +18,6 @@ public class Sequence {
 	{
 		this.dataSequence = new ArrayList<IData>();
 	}
-	
-//	public Sequence(PositionData data, int startIndex, List<PositionData> source)
-//	{
-//		this();
-//		this.startIndex = startIndex;
-//		this.eventList = source;
-//		addElement(data);
-//	}
-	
-//	public Sequence(List<PositionData> data, int startIndex, List<PositionData> source)
-//	{
-//		this();
-//		this.startIndex = startIndex;
-//		this.eventList = source;
-//		addList(data);
-//	}
 	
 	public Sequence(IData data, int index, List<IData> source)
 	{
@@ -69,17 +55,6 @@ public class Sequence {
 		Sequence s = (Sequence) o;
 		
 		boolean bool = false;
-//		if(sequence.size() == s.sequence.size())
-//		{
-//			for(int i = 0; i < sequence.size(); i++)
-//			{
-//				bool = sequence.get(i).equals(s.sequence.get(i));
-//				if (!bool)
-//					return false;
-//			}
-//
-//			return true;
-//		}
 		if(dataSequence.size() == s.dataSequence.size())
 		{
 			for(int i = 0; i < dataSequence.size(); i++)
@@ -101,16 +76,8 @@ public class Sequence {
 		boolean extended = false;
 		if(startIndex > 0)
 		{
-//			PositionData data = eventList.get(startIndex-1);
-			
-//			List<PositionData> list = new ArrayList<PositionData>();
-			
-//			list.add(data);
-//			list.addAll(sequence);
-
 			this.dataSequence.add(0, dataList.get(startIndex-1));
 			
-//			this.sequence = list;
 			this.startIndex -= 1;
 			extended = true;
 		}
@@ -119,14 +86,33 @@ public class Sequence {
 			this.dataSequence.add(dataList.get(startIndex + dataSequence.size()));
 			extended = true;
 		}
-//		if((startIndex + sequence.size()) < eventList.size())
-//		{
-//			this.sequence.add(eventList.get(startIndex + sequence.size()));
-//			extended = true;
-//		}
-//		System.out.println("Ende: " + this);
 		return extended;
 	}
+	
+//	public Point3D getCenter()
+//	{
+//		double x = 0, y = 0, z = 0, count = 0;
+//		
+//		for(IData d: dataSequence)
+//		{
+//			if(d instanceof PositionData)
+//			{
+//				PositionData p = (PositionData) d;
+//				x += p.getX();
+//				y += p.getY();
+//				count++;
+//			}
+//		}
+//		if(count > 0)
+//		{
+//			x /= count;
+//			y /= count;
+//			
+//			return new Point3D(x, y, z);
+//		}
+//		
+//		return null;
+//	}
 
 	public String toString()
 	{

@@ -71,6 +71,19 @@ public class FunctionalSpace {
 		}
 	}
 	
+	public double distanceTo(FunctionalSpace space)
+	{
+		switch (label) {
+		case KITCHEN:
+			
+			break;
+
+		default:
+			break;
+		}
+		return 0;
+	}
+	
 	public String toString()
 	{
 		return "X: " + x + " Y: " + y + " space: " + label;

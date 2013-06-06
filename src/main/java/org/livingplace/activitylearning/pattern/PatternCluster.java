@@ -81,7 +81,7 @@ public class PatternCluster {
 	{
 		for(Pattern p: patternList)
 		{
-			if(p.distanceTo(pattern) > Helper.MIN_SIMILAR)
+			if(p.distanceTo(pattern) < Helper.MAX_DISTANCE)
 				return true;
 		}
 		return false;

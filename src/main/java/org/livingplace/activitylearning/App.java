@@ -1,5 +1,6 @@
 package org.livingplace.activitylearning;
 
+import org.livingplace.activitylearning.data.PositionData;
 import org.livingplace.activitylearning.gui.GUI;
 
 
@@ -20,7 +21,7 @@ public class App {
 		kdd.dokdd();
 		
 		gui.setPatternClusterList(kdd.getClusterList());
-//		gui.setPoint3D(kdd.getDataPoints());
+
 		gui.repaint();
 //		System.out.println("Fertig");
 	}

@@ -73,15 +73,14 @@ public class KDD {
 //			compressed = true;
 		} while(!compressed);
 
-		removeDuplicates();
-//		for(Pattern p: discoveredPattern)
-//			System.out.println(p);
+//		removeDuplicates();
 		clusterPattern();
 		
-		compressCluster();
+//		compressCluster();
 		
 		for(PatternCluster pc : clusterList)
-			System.out.println(pc);
+			if(pc.getPatternList().size() > 1)
+				System.out.println(pc);
 	}
 	
 	private void discoverPatterns()
@@ -303,13 +302,10 @@ public class KDD {
 
 	public void clusterPattern()
 	{
-//		for(Pattern p: discoveredPattern)
-//			System.out.println(p);
-		
 		for (Pattern p: discoveredPattern)
 		{
 			boolean contains = false;
-//			System.out.println(p);
+			boolean createnew = true;
 			for(PatternCluster pc: clusterList)
 			{
 				contains = pc.containsPattern(p);
@@ -328,22 +324,22 @@ public class KDD {
 //				}
 				
 				double sim = pc.distanceToCentroid(p);
-				if(sim <= Helper.MIN_SIMILAR)
+				if(sim >= Helper.MIN_SIMILAR)
 				{
 //					System.out.println(sim);
 					pc.addPattern(p);
-					contains = true;
+//					contains = true;
+					createnew = false;
 					break;
 				}
 			}
-			if(!contains)
+			if(createnew)
 			{
 				PatternCluster cluster = new PatternCluster(p);
 //				cluster.addPattern(p);
 				clusterList.add(cluster);
 			}
 		}
-		System.out.println("Hier");
 	}
 	
 	private void compressCluster()
@@ -367,6 +363,7 @@ public class KDD {
 						for(Pattern p: pc2.getPatternList())
 						{
 							bool = pc1.containsPatternSequence(p) || pc1.isSimilar(p);
+//							bool = pc1.containsPatternSequence(p) || pc1.getCentroid().distanceTo(p) <= Helper.MAX_DISTANCE;
 							if(!bool)
 								break;
 						}

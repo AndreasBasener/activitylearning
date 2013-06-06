@@ -162,15 +162,26 @@ public class Pattern implements Comparable<Pattern>{
 		int size1 = s1.getDataSequence().size();
 		int size2 = s2.getDataSequence().size();
 		
+		double mean1 = this.meantime;
+		double mean2 = p.meantime;
+		double mean = 0;
+		
+		if(mean1 > mean2)
+			mean = mean2 / mean1;
+		else
+			mean = mean1 / mean2;
+		
 		int sizediff = size1 - size2; 
 		if(sizediff < 0)
 		{
 			Sequence temp = s1;
-			int temps = size1;
 			s1 = s2;
-			size1 = 2;
 			s2 = temp;
+			
+			int temps = size1;
+			size1 = size2;
 			size2 = temps;
+			
 			sizediff *= -1;
 		}
 		
@@ -184,14 +195,20 @@ public class Pattern implements Comparable<Pattern>{
 		}
 		
 		double mindist = Double.MAX_VALUE;
+		double meandist = 0;
 		for(double d: dist)
 		{
+			meandist += d;
 			if(d < mindist)
 			{
 				mindist = d;
 			}
 		}
+		meandist /= dist.length;
 		
+//		mindist += mean;
+		
+//		mindist /= size1;
 		
 		return mindist;
 	}

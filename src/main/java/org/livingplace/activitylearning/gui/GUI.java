@@ -17,7 +17,7 @@ public class GUI {
 		this.patternClusterList = new ArrayList<PatternCluster>();
 		
 		int xScale = 12, yScale = 17;
-		graph = new XYFrame(500,500,xScale,yScale);
+		graph = new XYFrame(550,700,xScale,yScale);
 		graph.setVisible(true);
 	}
 	

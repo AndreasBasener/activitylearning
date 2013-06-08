@@ -94,12 +94,10 @@ public class KDD {
 		patternList = new ArrayList<Pattern>();
 		
 		// Initiale Pattern finden
-//		for(PositionData d : positionList)
 		for(IData d: dataList)
 		{
 			if(!d.getClass().equals(Copy.PREDEFINED))
 			{
-//				Sequence seq = new Sequence(d, index, positionList);
 				Sequence seq = new Sequence(d, index, dataList);
 				boolean containsSequence = false;
 				for(Pattern p: initalPattern)

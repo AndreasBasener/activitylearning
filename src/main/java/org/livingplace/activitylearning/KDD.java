@@ -30,8 +30,6 @@ public class KDD {
 	
 	private List<PatternCluster> clusterList;
 	
-	private SlidingWindow slidingWindow;
-	
 	public KDD()
 	{
 		this.bestPattern = new ArrayList<Pattern>();
@@ -434,20 +432,6 @@ public class KDD {
 //		{
 //			System.out.println(d);
 //		}
-	}
-
-	/**
-	 * @return the slidingWindow
-	 */
-	public SlidingWindow getSlidingWindow() {
-		return slidingWindow;
-	}
-
-	/**
-	 * @param slidingWindow the slidingWindow to set
-	 */
-	public void setSlidingWindow(SlidingWindow slidingWindow) {
-		this.slidingWindow = slidingWindow;
 	}
 	
 	/**

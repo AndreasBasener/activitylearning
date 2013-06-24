@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.livingplace.activitylearning.data.PositionData;
 
+@Deprecated
 public class SlidingWindow {
 
 	private int windowSize;

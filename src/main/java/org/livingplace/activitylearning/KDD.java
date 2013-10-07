@@ -13,6 +13,9 @@ import org.livingplace.activitylearning.pattern.Pattern;
 import org.livingplace.activitylearning.pattern.PatternCluster;
 import org.livingplace.activitylearning.pattern.Sequence;
 import org.livingplace.scriptsimulator.Point3D;
+/* TODO: clustering auf richtiger pattern liste durchführen, bestPattern statt discoverdPattern
+ * Pattern Listen daraufhin überprüfen, ob immer die richtige verwendet wird.
+ */
 
 public class KDD {
 	
@@ -20,6 +23,11 @@ public class KDD {
 	
 	private List<Point3D> dataPoints;
 	
+	/**
+	 * Liste der Sensordaten für die Aktivitätenerkennung.
+	 * evtl. noch in eventList umbenennen
+	 */
+	//TODO: umbenennen
 	private List<IData> dataList;
 	
 	private List<Pattern> patternList;
@@ -51,7 +59,7 @@ public class KDD {
 	public void dokdd()
 	{
 		boolean compressed = false;
-
+		int numCycles = 0;
 		do
 		{
 			discoverPatterns();
@@ -66,19 +74,30 @@ public class KDD {
 			
 			markEvents(bp);
 			
-			compressed = compressPattern();
+			compressed = compressPattern(bp);
 			
+			numCycles++;
 //			compressed = true;
 		} while(!compressed);
 
+//		for(Pattern p: bestPattern)
+//			System.out.println(p);
+		
+		System.out.println(numCycles);
 //		removeDuplicates();
 		clusterPattern();
 		
-//		compressCluster();
 		
-		for(PatternCluster pc : clusterList)
-			if(pc.getPatternList().size() > 1)
-				System.out.println(pc);
+//		for(PatternCluster pc : clusterList)
+//			if(pc.getPatternList().size() > 1)
+//				System.out.println(pc);
+		
+		compressCluster();
+		
+
+//		for(PatternCluster pc : clusterList)
+//			if(pc.getPatternList().size() > 0)
+//				System.out.println(pc);
 	}
 	
 	private void discoverPatterns()
@@ -152,10 +171,8 @@ public class KDD {
 			for(Pattern p: extendedList)
 			{
 //				System.out.println("ex: " +p);
-//				for(int i = 0; i < (positionList.size() - p.getSequence().getSequence().size() + 1); i++)
 				for(int i = 0; i < (dataList.size() - p.getSequence().getDataSequence().size() + 1); i++)
 				{
-//					List<PositionData> slist = new ArrayList<PositionData>();
 					List<IData> slist = new ArrayList<IData>();
 					for(int j = 0; j < p.getSequence().getDataSequence().size();j++)
 					{
@@ -169,7 +186,7 @@ public class KDD {
 			for(int i=0; i< extendedList.size(); i++)
 			{
 				Pattern p = extendedList.get(i);
-				p.evaluate(dataList.size());
+				p.evaluate(dataList.size()); //Evtl evaluate mit in die if-Abfrage
 //				System.out.printlng("Muster: " + i + " " + p);
 				if(p.getPatternCount() > 1)
 				{
@@ -214,8 +231,6 @@ public class KDD {
 //			System.out.println(p);
 			for(int i = 0; i < pattern.getSequence().getDataSequence().size(); i++)
 			{
-//				PositionData pos = p.getSequence().getSequence().get(i);
-//				PositionData event = positionList.get(integer + i);
 				IData event = dataList.get(integer + i);
 //				System.out.println(event);
 				
@@ -246,11 +261,11 @@ public class KDD {
 		return numnewevents;
 	}
 	
-	public boolean compressPattern()
+	public boolean compressPattern(Pattern pattern)
 	{
 		List<IData> newList = new ArrayList<IData>();
 		
-		IData firstEvent = dataList.get(0);
+		IData firstEvent = pattern.getSequence().getDataSequence().get(0);
 		firstEvent.setCopy(Copy.TRUE);
 		
 		for(int i = 0; i < dataList.size(); i++)
@@ -265,7 +280,7 @@ public class KDD {
 				newList.add(dataList.get(i));
 			}
 		}
-		
+		System.out.println("alt: " + dataList.size() + "neu: " +newList.size());
 		if(newList.size() < dataList.size())
 		{
 			dataList = newList;
@@ -298,7 +313,8 @@ public class KDD {
 
 	public void clusterPattern()
 	{
-		for (Pattern p: discoveredPattern)
+//		for (Pattern p: discoveredPattern)
+		for (Pattern p: bestPattern)
 		{
 			boolean contains = false;
 			boolean createnew = true;
@@ -320,7 +336,7 @@ public class KDD {
 //				}
 				
 				double sim = pc.distanceToCentroid(p);
-				if(sim >= Helper.MIN_SIMILAR)
+				if(sim >= Helper.MIN_SIMILAR_CLUSTER)
 				{
 //					System.out.println(sim);
 					pc.addPattern(p);
@@ -344,38 +360,71 @@ public class KDD {
 		PatternCluster pc1 = null;
 		PatternCluster pc2 = null;
 		
-		do
+		List<PatternCluster> clist = new ArrayList<PatternCluster>();
+		
+		System.out.println("Starte Clusterkomprimierung. " + clusterList.size() + " werden komprimiert");
+		
+		for(PatternCluster cluster1: clusterList)
 		{
-			maxCompression = true;
-			for(int i = 0; i < clusterList.size(); i++)
+			if(clist.size() == 0)
 			{
-				boolean bool = false;
-				pc1 = clusterList.get(i);
-				for(int j = 0; j < clusterList.size(); j++)
+				clist.add(cluster1);
+			}
+			else
+			{
+				boolean merge = false;
+				for(PatternCluster cluster2: clist)
 				{
-					if (i != j) // Nicht ein PatternCluster mit sich selbst mergen
+					if(cluster1 != cluster2) //nicht versuchen ein Cluster mit sich selbst zu mergen
 					{
-						pc2 = clusterList.get(j);
-						for(Pattern p: pc2.getPatternList())
+						merge = cluster1.isSimilar(cluster2);
+						if(merge)
 						{
-							bool = pc1.containsPatternSequence(p) || pc1.isSimilar(p);
-//							bool = pc1.containsPatternSequence(p) || pc1.getCentroid().distanceTo(p) <= Helper.MAX_DISTANCE;
-							if(!bool)
-								break;
-						}
-						if(!bool)
+							cluster2.merge(cluster1);
 							break;
+						}
 					}
-					if(bool)
-					{
-						pc1.merge(pc2);
-						clusterList.remove(j);
-						maxCompression = false;
-					}
+				}
+				if(!merge)
+				{
+					clist.add(cluster1);
 				}
 			}
 		}
-		while(!maxCompression);
+		clusterList = clist;
+//		do
+//		{
+//			maxCompression = true;
+//			for(int i = 0; i < clusterList.size(); i++)
+//			{
+//				boolean bool = false;
+//				pc1 = clusterList.get(i);
+//				for(int j = 0; j < clusterList.size(); j++)
+//				{
+//					if (i != j) // Nicht ein PatternCluster mit sich selbst mergen
+//					{
+//						pc2 = clusterList.get(j);
+//						for(Pattern p: pc2.getPatternList())
+//						{
+//							bool = pc1.containsPatternSequence(p) || pc1.isSimilar(p);
+////							bool = pc1.containsPatternSequence(p) || pc1.getCentroid().distanceTo(p) <= Helper.MAX_DISTANCE;
+//							if(!bool)
+//								break;
+//						}
+//						if(!bool)
+//							break;
+//					}
+//					if(bool)
+//					{
+//						pc1.merge(pc2);
+//						clusterList.remove(j);
+//						maxCompression = false;
+//					}
+//				}
+//			}
+//		}
+//		while(!maxCompression);
+		System.out.println("Cluster fertig komprimiert. " + clist.size() + " Cluster übrig");
 	}
 	
 	private void parseFile()

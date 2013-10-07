@@ -53,6 +53,9 @@ public class XYPanel extends JPanel
 	private List<PatternCluster> patternCluster;
 	
 	private Image floorplan;
+	
+	private Image[] shapes;
+	private int shapescount = 12;
 
 	public XYPanel(int width, int height, int xScale, int yScale) 
 	{
@@ -67,7 +70,13 @@ public class XYPanel extends JPanel
 		
 		this.random = new Random();
 		
-		this.floorplan = Toolkit.getDefaultToolkit().getImage("data\\LPGrundriss2.png");
+		this.floorplan = Toolkit.getDefaultToolkit().getImage("data\\LPGrundriss.png");
+		
+		shapes = new Image[shapescount];
+		for(int i = 0; i < shapescount; i++)
+		{
+			shapes[i] = Toolkit.getDefaultToolkit().getImage("data\\shapes\\shape"+ (i+1) + ".png");
+		}
 	}
 
 	@Override
@@ -81,6 +90,12 @@ public class XYPanel extends JPanel
 		Dimension d = getSize();
 		Insets i = getInsets();
 
+		int ix=10,yp= 10;
+		for(Image image: shapes)
+		{
+			g2d.drawImage(image, ix +=10, yp, null);
+		}
+		
 		
 		//Länge der Achsen berechnen
 		int xScaleLength = d.width - i.left - i.right - offset * 2;
@@ -101,8 +116,8 @@ public class XYPanel extends JPanel
 		g2d.drawLine(offset, offset + yScaleLength, offset + xScaleLength, offset + yScaleLength);
 		g2d.drawLine(offset, offset, offset, offset + yScaleLength);
 		
-		g2d.drawString("X", offset + xScaleLength + 10, offset + yScaleLength + 7);
-		g2d.drawString("Y", offset, offset);
+		g2d.drawString("X [m]", offset + xScaleLength + 10, offset + yScaleLength + 7);
+		g2d.drawString("Y [m]", offset, offset);
 		
 		//Nullpunkt zeichnen
 		g2d.drawString("0", offset - 7, offset + yScaleLength + 10);
@@ -207,6 +222,12 @@ public class XYPanel extends JPanel
 				g2d.setColor(new Color(random.nextInt()));
 				break;
 			}
+			
+			Image img;
+			if(cCount < shapescount)
+				img = shapes[cCount];
+			else
+				img = shapes[shapescount-1];
 			for(Pattern p: pc.getPatternList())
 			{
 				List<IData> plist = p.getSequence().getDataSequence();
@@ -215,12 +236,27 @@ public class XYPanel extends JPanel
 					if (data instanceof PositionData)
 					{
 						PositionData pos = (PositionData) data;
-						double y = d.getHeight() - pos.getY() * ySteps - offset;
-						g2d.drawLine((int) (pos.getX() * xSteps) + offset, (int) y, 
-								(int) (pos.getX() * xSteps) + offset, (int) y);
+						int y = (int)(d.getHeight() - pos.getY() * ySteps) - offset;
+						int x = (int)(pos.getX() * xSteps) + offset;
+						g2d.drawImage(img, x, y, null);
 					}
 				}
 			}
+			
+//			for(Pattern p: pc.getPatternList())
+//			{
+//				List<IData> plist = p.getSequence().getDataSequence();
+//				for(IData data: plist)
+//				{
+//					if (data instanceof PositionData)
+//					{
+//						PositionData pos = (PositionData) data;
+//						double y = d.getHeight() - pos.getY() * ySteps - offset;
+//						g2d.drawLine((int) (pos.getX() * xSteps) + offset, (int) y, 
+//								(int) (pos.getX() * xSteps) + offset, (int) y);
+//					}
+//				}
+//			}
 			cCount++;
 		}
 	

@@ -23,6 +23,7 @@ public class App {
 		gui.setPatternClusterList(kdd.getClusterList());
 
 		gui.repaint();
+		gui.saveImage();
 //		System.out.println("Fertig");
 	}
 	

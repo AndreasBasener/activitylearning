@@ -56,5 +56,17 @@ public class XYFrame extends JFrame{
 	{
 		panel.setPatternCluster(patternCluster);
 	}
+	/**
+	 * @return the panel
+	 */
+	public XYPanel getPanel() {
+		return panel;
+	}
+	/**
+	 * @param panel the panel to set
+	 */
+	public void setPanel(XYPanel panel) {
+		this.panel = panel;
+	}
 	
 }

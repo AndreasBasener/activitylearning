@@ -87,6 +87,16 @@ public class PatternCluster {
 		return false;
 	}
 	
+	public boolean isSimilar(PatternCluster cluster)
+	{
+		double dist = centroid.distanceTo(cluster.getCentroid());
+//		System.out.println(dist);
+		if(this.centroid.distanceTo(cluster.getCentroid()) < Helper.MIN_DISTANCE_COMPRESS)
+			return true;
+		else
+			return false;
+	}
+	
 	public double distanceToCentroid(Pattern pattern)
 	{
 		return centroid.distanceTo(pattern);

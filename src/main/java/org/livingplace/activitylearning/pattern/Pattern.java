@@ -9,15 +9,25 @@ import org.livingplace.activitylearning.data.IData;
 public class Pattern implements Comparable<Pattern>{
 
 //	private List<Sequence> sequenceList;
+	/**
+	 * Die Sequenz, die dieses <code>Pattern</code> beschreibt.
+	 */
 	private Sequence sequence;
 	
+	/**
+	 * Liste der Indizes, an denen das Muster im Datenstrom vorkommt.
+	 */
 	private List<Integer> instances;
+
+	/**
+	 * Gibt an, wie häufig das Pattern im Datenstrom vorkommt.
+	 */
+	private int patternCount = 0;
 	
 	private double value;
 	private double meantime;
 	private double stddevtime;
 	
-	private int patternCount = 0;
 	
 	private boolean used = false;
 	
@@ -209,8 +219,13 @@ public class Pattern implements Comparable<Pattern>{
 //		mindist += mean;
 		
 //		mindist /= size1;
-		
-		return mindist;
+//		if(this.sequence.getDataSequence().size() > 1)
+//		{
+//			System.out.println(this);
+//			System.out.println(p);
+//			System.out.println("Mindist: " + mindist + " sizediff: " + sizediff);
+//		}
+		return mindist + sizediff;
 	}
 	
 //	public double distanceTo(Pattern p)

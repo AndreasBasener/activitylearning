@@ -1,7 +1,19 @@
 package org.livingplace.activitylearning.gui;
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
+import javax.imageio.stream.MemoryCacheImageOutputStream;
 
 import org.livingplace.activitylearning.pattern.PatternCluster;
 import org.livingplace.scriptsimulator.Point3D;
@@ -10,14 +22,16 @@ public class GUI {
 
 	private XYFrame graph;
 	
+	int x = 550, y = 700, xScale = 12, yScale = 17;
+	
 	private List<PatternCluster> patternClusterList;
 	
 	public GUI()
 	{
 		this.patternClusterList = new ArrayList<PatternCluster>();
 		
-		int xScale = 12, yScale = 17;
-		graph = new XYFrame(550,700,xScale,yScale);
+		//int xScale = 12, yScale = 17;
+		graph = new XYFrame(x,y,xScale,yScale);
 		graph.setVisible(true);
 	}
 	
@@ -53,5 +67,30 @@ public class GUI {
 	public void setPatternClusterList(List<PatternCluster> patternClusterList) {
 		this.patternClusterList = patternClusterList;
 		graph.setPatternClusterList(patternClusterList);
+	}
+	
+	public void saveImage()
+	{
+		BufferedImage img = new BufferedImage(graph.getPanel().getWidth(), graph.getPanel().getHeight(), BufferedImage.TYPE_INT_RGB);
+		Graphics2D g2d = img.createGraphics();
+		graph.getPanel().paintAll(g2d);
+		g2d.dispose();
+		
+		try {
+//			Iterator<ImageWriter> iterator = ImageIO.getImageWritersByFormatName("jpg");
+//			ImageWriter imageWriter = iterator.next();
+//			ImageWriteParam imageWriteParam = imageWriter.getDefaultWriteParam();
+//			imageWriteParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+//			imageWriteParam.setCompressionQuality(1);
+//			ImageOutputStream imageOutputStream = new MemoryCacheImageOutputStream(outputstream);
+//			imageWriter.setOutput(imageOutputStream);
+//			IIOImage iioimage = new IIOImage(img, null, null);
+//			imageWriter.write(null, iioimage, imageWriteParam);
+//			imageOutputStream.flush();
+			ImageIO.write(img, "png", new File("activityresult.png"));
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

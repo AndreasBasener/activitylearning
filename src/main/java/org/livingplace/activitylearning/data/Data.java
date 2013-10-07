@@ -12,7 +12,7 @@ public class Data  implements IData{
 	}
 	
 	public double distanceTo(IData data) {
-		return 0;
+		return 1;
 	}
 
 	public long getTime() {

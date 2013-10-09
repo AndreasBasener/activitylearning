@@ -70,7 +70,7 @@ public class XYPanel extends JPanel
 		
 		this.random = new Random();
 		
-		this.floorplan = Toolkit.getDefaultToolkit().getImage("data\\LPGrundriss.png");
+		this.floorplan = Toolkit.getDefaultToolkit().getImage("data\\LPGrundriss_fs.png");
 		
 		shapes = new Image[shapescount];
 		for(int i = 0; i < shapescount; i++)
@@ -186,7 +186,7 @@ public class XYPanel extends JPanel
 		
 		for(PatternCluster pc: patternCluster)
 		{
-			if (pc.getPatternList().size() < 3)
+			if (pc.getPatternList().size() < 1)
 				continue;
 //			g2d.setColor(new Color(random.nextInt()));
 			g2d.setStroke(new BasicStroke(pointStroke));
@@ -223,26 +223,11 @@ public class XYPanel extends JPanel
 				break;
 			}
 			
-			Image img;
-			if(cCount < shapescount)
-				img = shapes[cCount];
-			else
-				img = shapes[shapescount-1];
-			for(Pattern p: pc.getPatternList())
-			{
-				List<IData> plist = p.getSequence().getDataSequence();
-				for(IData data: plist)
-				{
-					if (data instanceof PositionData)
-					{
-						PositionData pos = (PositionData) data;
-						int y = (int)(d.getHeight() - pos.getY() * ySteps) - offset;
-						int x = (int)(pos.getX() * xSteps) + offset;
-						g2d.drawImage(img, x, y, null);
-					}
-				}
-			}
-			
+//			Image img;
+//			if(cCount < shapescount)
+//				img = shapes[cCount];
+//			else
+//				img = shapes[shapescount-1];
 //			for(Pattern p: pc.getPatternList())
 //			{
 //				List<IData> plist = p.getSequence().getDataSequence();
@@ -251,12 +236,27 @@ public class XYPanel extends JPanel
 //					if (data instanceof PositionData)
 //					{
 //						PositionData pos = (PositionData) data;
-//						double y = d.getHeight() - pos.getY() * ySteps - offset;
-//						g2d.drawLine((int) (pos.getX() * xSteps) + offset, (int) y, 
-//								(int) (pos.getX() * xSteps) + offset, (int) y);
+//						int y = (int)(d.getHeight() - pos.getY() * ySteps) - offset;
+//						int x = (int)(pos.getX() * xSteps) + offset;
+//						g2d.drawImage(img, x, y, null);
 //					}
 //				}
 //			}
+			
+			for(Pattern p: pc.getPatternList())
+			{
+				List<IData> plist = p.getSequence().getDataSequence();
+				for(IData data: plist)
+				{
+					if (data instanceof PositionData)
+					{
+						PositionData pos = (PositionData) data;
+						double y = d.getHeight() - pos.getY() * ySteps - offset;
+						g2d.drawLine((int) (pos.getX() * xSteps) + offset, (int) y, 
+								(int) (pos.getX() * xSteps) + offset, (int) y);
+					}
+				}
+			}
 			cCount++;
 		}
 	

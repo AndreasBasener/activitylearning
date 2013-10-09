@@ -69,9 +69,10 @@ public class KDD {
 			Pattern bp = patternList.get(0);
 			
 //			System.out.println("Bestes Pattern: " + bp);
-			
-			bestPattern.add(bp);
-			
+			if(!bestPattern.contains(bp))
+			{
+				bestPattern.add(bp);
+			}
 			markEvents(bp);
 			
 			compressed = compressPattern(bp);
@@ -80,19 +81,19 @@ public class KDD {
 //			compressed = true;
 		} while(!compressed);
 
-//		for(Pattern p: bestPattern)
+//		for(Pattern p: discoveredPattern)
 //			System.out.println(p);
 		
-		System.out.println(numCycles);
+//		System.out.println(numCycles);
 //		removeDuplicates();
 		clusterPattern();
 		
 		
-//		for(PatternCluster pc : clusterList)
-//			if(pc.getPatternList().size() > 1)
-//				System.out.println(pc);
+		for(PatternCluster pc : clusterList)
+			if(pc.getPatternList().size() > 0)
+				System.out.println(pc);
 		
-		compressCluster();
+//		compressCluster();
 		
 
 //		for(PatternCluster pc : clusterList)
@@ -167,6 +168,8 @@ public class KDD {
 				}
 				if(!localDiscoverdPattern.contains(parentPattern))
 					localDiscoverdPattern.add(parentPattern);
+				else
+					System.out.println("gibt es schon");
 			}
 			for(Pattern p: extendedList)
 			{
@@ -209,7 +212,12 @@ public class KDD {
 //		{
 //			System.out.println(p);
 //		}
-		discoveredPattern.addAll(localDiscoverdPattern);
+		for(Pattern p: localDiscoverdPattern)
+		{
+			if(!discoveredPattern.contains(p))
+				discoveredPattern.add(p);
+		}
+//		discoveredPattern.addAll(localDiscoverdPattern);
 	}
 	
 	private int markEvents(Pattern pattern)
@@ -280,7 +288,7 @@ public class KDD {
 				newList.add(dataList.get(i));
 			}
 		}
-		System.out.println("alt: " + dataList.size() + "neu: " +newList.size());
+//		System.out.println("alt: " + dataList.size() + "neu: " +newList.size());
 		if(newList.size() < dataList.size())
 		{
 			dataList = newList;
@@ -313,11 +321,23 @@ public class KDD {
 
 	public void clusterPattern()
 	{
+		
+		List<Pattern> workList = new ArrayList<Pattern>();
+		
+		for(Pattern p1: discoveredPattern)
+		{
+			if(p1.getSequence().getDataSequence().size() > 1)
+				workList.add(p1);
+		}
+		
 //		for (Pattern p: discoveredPattern)
-		for (Pattern p: bestPattern)
+		for (Pattern p: workList)
+//		for (Pattern p: bestPattern)
 		{
 			boolean contains = false;
 			boolean createnew = true;
+			double[] distanceToPatternCluster = new double[clusterList.size()];
+			int index = 0;
 			for(PatternCluster pc: clusterList)
 			{
 				contains = pc.containsPattern(p);
@@ -328,23 +348,32 @@ public class KDD {
 				if(contains)
 					break;
 				
-//				contains = pc.isSimilar(p);
-//				if(contains)
-//				{
-//					pc.addPattern(p);
-//					break;
-//				}
-				
 				double sim = pc.distanceToCentroid(p);
-				if(sim >= Helper.MIN_SIMILAR_CLUSTER)
-				{
-//					System.out.println(sim);
-					pc.addPattern(p);
-//					contains = true;
-					createnew = false;
-					break;
-				}
+				distanceToPatternCluster[index] = sim;
+				index++;
 			}
+			if(contains)
+				continue;
+			
+			int mindistindex = Integer.MAX_VALUE;
+			double mindist = Double.MAX_VALUE;
+			index = 0;
+			for(double d: distanceToPatternCluster)
+			{
+				if(d < mindist)
+				{
+					mindist = d;
+					mindistindex = index;
+				}
+				index++;
+			}
+			
+			if(mindist <= Helper.MIN_SIMILAR_CLUSTER && index < Integer.MAX_VALUE)
+			{
+				clusterList.get(mindistindex).addPattern(p);
+				createnew = false;
+			}
+
 			if(createnew)
 			{
 				PatternCluster cluster = new PatternCluster(p);

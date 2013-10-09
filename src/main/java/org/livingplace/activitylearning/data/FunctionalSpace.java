@@ -28,8 +28,14 @@ public class FunctionalSpace {
 		}
 		else if((x >= 0 && x <= 4.13) && (y > 4.74 && y <= 10.63)) // kitchen
 		{
-			if((x >= 0.0 && x <= 2.0) && (y >= 4.75 && y <= 7.56))
+			if((x >= 0.0 && x <= 1.75) && (y >= 4.75 && y <= 5.60))
 				label = FunctionalSpaceLabel.KITCHEN_SHELF;
+			else if((x >= 0.0 && x <= 1.75) && (y >= 5.65 && y <= 6.50))
+				label = FunctionalSpaceLabel.KITCHEN_COFFEEMACHINE;
+			else if((x >= 0.0 && x <= 1.75) && (y >= 6.55 && y <= 7.40))
+				label = FunctionalSpaceLabel.KITCHEN_SINK;
+			else if((x >= 3.0 && x <= 4.10) && (y >= 6.0 && y <= 7.10))
+				label = FunctionalSpaceLabel.KITCHEN_FRIDGE;
 			else if((x >= 1.4 && x <= 3.8) && (y >= 7.6 && y <= 10.2))
 				label = FunctionalSpaceLabel.KITCHEN_COOKING;
 			else

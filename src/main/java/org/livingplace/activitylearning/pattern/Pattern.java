@@ -148,11 +148,11 @@ public class Pattern implements Comparable<Pattern>{
 		
 		Pattern p = (Pattern) o;
 		
-		return this.sequence.equals(p.sequence) &&
-				this.meantime == p.meantime &&
-				this.patternCount == p.patternCount &&
-				this.stddevtime == p.stddevtime &&
-				this.value == p.value;
+		return this.sequence.equals(p.sequence);// &&
+//				this.meantime == p.meantime &&
+//				this.patternCount == p.patternCount &&
+//				this.stddevtime == p.stddevtime &&
+//				this.value == p.value;
 	}
 	
 	public int compareTo(Pattern o) {

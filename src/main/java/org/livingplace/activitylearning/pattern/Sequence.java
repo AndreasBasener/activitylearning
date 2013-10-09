@@ -54,21 +54,23 @@ public class Sequence {
 		
 		Sequence s = (Sequence) o;
 		
-		boolean bool = false;
-		if(dataSequence.size() == s.dataSequence.size())
-		{
-			for(int i = 0; i < dataSequence.size(); i++)
-			{
-				bool = dataSequence.get(i).equals(s.dataSequence.get(i));
-				if(!bool)
-					return false;
-			}
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return dataSequence.equals(s.dataSequence);
+		
+//		boolean bool = false;
+//		if(dataSequence.size() == s.dataSequence.size())
+//		{
+//			for(int i = 0; i < dataSequence.size(); i++)
+//			{
+//				bool = dataSequence.get(i).equals(s.dataSequence.get(i));
+//				if(!bool)
+//					return false;
+//			}
+//			return true;
+//		}
+//		else
+//		{
+//			return false;
+//		}
 	}
 	
 	public boolean extend()

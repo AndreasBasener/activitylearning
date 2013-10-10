@@ -90,11 +90,11 @@ public class XYPanel extends JPanel
 		Dimension d = getSize();
 		Insets i = getInsets();
 
-		int ix=10,yp= 10;
-		for(Image image: shapes)
-		{
-			g2d.drawImage(image, ix +=10, yp, null);
-		}
+//		int ix=10,yp= 10;
+//		for(Image image: shapes)
+//		{
+//			g2d.drawImage(image, ix +=10, yp, null);
+//		}
 		
 		
 		//Länge der Achsen berechnen

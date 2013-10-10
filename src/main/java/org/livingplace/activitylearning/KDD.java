@@ -477,6 +477,8 @@ public class KDD {
 							dataList.add(new BedData(data));
 						else if(str.equals("Blinds"))
 							dataList.add(new BlindsData(data));
+						else if(str.equals("Couch"))
+							dataList.add(new CouchData(data));
 						else if(str.equals("DoorBell"))
 							dataList.add(new DoorBellData(data));
 						else if(str.equals("Door"))

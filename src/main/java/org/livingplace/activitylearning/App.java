@@ -1,6 +1,5 @@
 package org.livingplace.activitylearning;
 
-import org.livingplace.activitylearning.data.PositionData;
 import org.livingplace.activitylearning.gui.GUI;
 
 
@@ -15,7 +14,7 @@ public class App {
 		
 		GUI gui = new GUI();
 		
-		KDD kdd = new KDD("data\\output.csv");
+		KDD kdd = new KDD("data\\output_testTag.csv");
 //		KDD kdd = new KDD("C:\\workspacejuno\\scriptsimulator\\output.csv");
 
 		kdd.dokdd();

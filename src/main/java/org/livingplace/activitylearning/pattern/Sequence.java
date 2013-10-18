@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.livingplace.activitylearning.data.IData;
-import org.livingplace.activitylearning.data.PositionData;
-import org.livingplace.scriptsimulator.Point3D;
 
 public class Sequence {
 	
@@ -76,13 +74,15 @@ public class Sequence {
 	public boolean extend()
 	{
 		boolean extended = false;
-		if(startIndex > 0)
-		{
-			this.dataSequence.add(0, dataList.get(startIndex-1));
-			
-			this.startIndex -= 1;
-			extended = true;
-		}
+		//Event voranstellen
+//		if(startIndex > 0)
+//		{
+//			this.dataSequence.add(0, dataList.get(startIndex-1));
+//			
+//			this.startIndex -= 1;
+//			extended = true;
+//		}
+		//Event anhängen
 		if((startIndex + dataSequence.size()) < dataList.size())
 		{
 			this.dataSequence.add(dataList.get(startIndex + dataSequence.size()));
@@ -116,6 +116,52 @@ public class Sequence {
 //		return null;
 //	}
 
+//	public double bestMatch(List<IData> data)
+//	{
+//		List<IData> list1;
+//		List<IData> list2;
+//		
+//		int lengthdiff = dataSequence.size() - data.size();
+//		int maxlength = data.size();
+//		
+//		int matches[];
+//		
+//		if(lengthdiff < 0)
+//		{
+//			list1 = data;
+//			list2 = dataSequence;
+//			matches = new int[(lengthdiff * -1) + 1];
+//		}
+//		else
+//		{
+//			list1 = dataSequence;
+//			list2 = data;
+//			matches = new int[lengthdiff + 1];
+//		}
+//		
+//		for(int i = 0; i <= lengthdiff; i++)
+//		{
+//			for(int j = 0; j < list2.size(); j++)
+//			{
+//				if(list1.get(j+i).equals(list2.get(j)))
+//					matches[i]++;
+//			}
+//		}
+//		
+//		int bestmatch = 0;
+//		
+//		for(int i: matches)
+//		{
+//			if(i > bestmatch)
+//				bestmatch = i;
+//		}
+//		
+//		if(maxlength == 0)
+//			return -1;
+//		else
+//			return bestmatch/maxlength;
+//	}
+	
 	public String toString()
 	{
 		String s = "Index: " + startIndex + " Sequence: ";

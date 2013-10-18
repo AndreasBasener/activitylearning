@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,16 +13,13 @@ import org.livingplace.activitylearning.data.*;
 import org.livingplace.activitylearning.pattern.Pattern;
 import org.livingplace.activitylearning.pattern.PatternCluster;
 import org.livingplace.activitylearning.pattern.Sequence;
-import org.livingplace.scriptsimulator.Point3D;
-/* TODO: clustering auf richtiger pattern liste durchführen, bestPattern statt discoverdPattern
- * Pattern Listen daraufhin überprüfen, ob immer die richtige verwendet wird.
- */
+import org.livingplace.activitylearning.pattern.Pattern.OrderType;
 
 public class KDD {
 	
-	private String filename;
+//	private String filename;
 	
-	private List<Point3D> dataPoints;
+//	private List<Point3D> dataPoints;
 	
 	/**
 	 * Liste der Sensordaten für die Aktivitätenerkennung.
@@ -44,16 +42,17 @@ public class KDD {
 		this.clusterList = new ArrayList<PatternCluster>();
 		this.discoveredPattern = new ArrayList<Pattern>();
 		this.dataList = new ArrayList<IData>();
-		this.dataPoints = new ArrayList<Point3D>();
+//		this.dataPoints = new ArrayList<Point3D>();
 	}
 	
 	public KDD(String filename)
 	{
 		this();
-		this.filename = filename;
+//		this.filename = filename;
 		
-		parseFile();
-		
+//		parseFile();
+		dataList = readFile(filename);
+		System.out.println(dataList.size() + " Events eingelesen");
 	}
 	
 	public void dokdd()
@@ -63,9 +62,9 @@ public class KDD {
 		do
 		{
 			discoverPatterns();
-			
+
+			Pattern.setOrdertype(OrderType.VALUE);
 			Collections.sort(patternList);
-			
 			Pattern bp = patternList.get(0);
 			
 //			System.out.println("Bestes Pattern: " + bp);
@@ -79,7 +78,10 @@ public class KDD {
 			
 			numCycles++;
 //			compressed = true;
-		} while(!compressed);
+		} while(!compressed && numCycles > 1);
+		
+		System.out.println(discoveredPattern.size() + " Pattern entdeckt");
+		System.out.println(bestPattern.size() + " beste Pattern entdeckt");
 
 //		for(Pattern p: discoveredPattern)
 //			System.out.println(p);
@@ -88,10 +90,11 @@ public class KDD {
 //		removeDuplicates();
 		clusterPattern();
 		
+		System.out.println(clusterList.size() + " Cluster erzeugt");
 		
-		for(PatternCluster pc : clusterList)
-			if(pc.getPatternList().size() > 0)
-				System.out.println(pc);
+//		for(PatternCluster pc : clusterList)
+//			if(pc.getPatternList().size() > 0)
+//				System.out.println(pc);
 		
 //		compressCluster();
 		
@@ -168,8 +171,8 @@ public class KDD {
 				}
 				if(!localDiscoverdPattern.contains(parentPattern))
 					localDiscoverdPattern.add(parentPattern);
-				else
-					System.out.println("gibt es schon");
+//				else
+//					System.out.println("gibt es schon");
 			}
 			for(Pattern p: extendedList)
 			{
@@ -296,28 +299,6 @@ public class KDD {
 		}
 		return true;
 	}
-	
-	private void removeDuplicates()
-	{
-		List<Pattern> list = new ArrayList<Pattern>();
-		for(Pattern dp: discoveredPattern)
-		{
-			boolean duplicate = false;
-			for(Pattern p: list)
-			{
-				if(dp.getSequence().equals(p.getSequence()))
-				{
-					duplicate = true;
-					break;
-				}
-			}
-			if(!duplicate)
-			{
-				list.add(dp);
-			}
-		}
-		discoveredPattern = list;
-	}
 
 	public void clusterPattern()
 	{
@@ -326,13 +307,13 @@ public class KDD {
 		
 		for(Pattern p1: discoveredPattern)
 		{
-			if(p1.getSequence().getDataSequence().size() > 1)
+			if(p1.getSequence().getDataSequence().size() > 2 /*&& p1.numberOfTypes() > 1*/)
 				workList.add(p1);
 		}
-		
-//		for (Pattern p: discoveredPattern)
+		Pattern.setOrdertype(OrderType.SIZE);
+		Collections.sort(workList);
+		System.out.println(workList.size() + " Pattern zum clustern übrig");
 		for (Pattern p: workList)
-//		for (Pattern p: bestPattern)
 		{
 			boolean contains = false;
 			boolean createnew = true;
@@ -346,7 +327,10 @@ public class KDD {
 				
 				contains = pc.containsPatternSequence(p);
 				if(contains)
+				{
+					pc.addPattern(p);
 					break;
+				}
 				
 				double sim = pc.distanceToCentroid(p);
 				distanceToPatternCluster[index] = sim;
@@ -456,8 +440,13 @@ public class KDD {
 		System.out.println("Cluster fertig komprimiert. " + clist.size() + " Cluster übrig");
 	}
 	
-	private void parseFile()
+	public List<IData> readFile(String filename)
 	{
+		if(filename == null || filename.equals(""))
+			return null;
+		
+		List<IData> sequence = new ArrayList<IData>();
+		
 		try {
 			FileReader reader = new FileReader(filename);
 			BufferedReader br = new BufferedReader(reader);
@@ -465,38 +454,37 @@ public class KDD {
 			try {
 				while((line = br.readLine())!=null)
 				{
-//					positionList.add(new PositionData(line));
 					String[] strarr = line.split(";", 2);
 					if(strarr.length == 2)
 					{
 						String str = strarr[0];
 						String data = strarr[1];
 						if(str.equals("Alarm"))
-							dataList.add(new AlarmData(data));
+							sequence.add(new AlarmData(data));
 						else if(str.equals("Bed"))
-							dataList.add(new BedData(data));
+							sequence.add(new BedData(data));
 						else if(str.equals("Blinds"))
-							dataList.add(new BlindsData(data));
+							sequence.add(new BlindsData(data));
 						else if(str.equals("Couch"))
-							dataList.add(new CouchData(data));
+							sequence.add(new CouchData(data));
 						else if(str.equals("DoorBell"))
-							dataList.add(new DoorBellData(data));
+							sequence.add(new DoorBellData(data));
 						else if(str.equals("Door"))
-							dataList.add(new DoorData(data));
+							sequence.add(new DoorData(data));
 						else if(str.equals("Ubisense"))
 						{
 							PositionData pd = new PositionData(data);
-							dataList.add(pd);
-							addDataPoint(new Point3D(pd.getX(), pd.getY(), 0));
+							sequence.add(pd);
+//							addDataPoint(new Point3D(pd.getX(), pd.getY(), 0));
 						}
 						else if(str.equals("Power"))
-							dataList.add(new PowerData(data));
+							sequence.add(new PowerData(data));
 						else if(str.equals("Storage"))
-							dataList.add(new StorageData(data));
+							sequence.add(new StorageData(data));
 						else if(str.equals("Water"))
-							dataList.add(new WaterData(data));
+							sequence.add(new WaterData(data));
 						else if(str.equals("Window"))
-							dataList.add(new WindowData(data));
+							sequence.add(new WindowData(data));
 					}
 //					dataList.add(new PositionData(line));
 //					System.out.println(line);
@@ -508,10 +496,14 @@ public class KDD {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-//		for(IData d: dataList)
+		
+//		System.out.println(filename);
+//		for(IData d: sequence)
 //		{
 //			System.out.println(d);
 //		}
+		
+		return sequence;
 	}
 	
 	/**
@@ -544,19 +536,19 @@ public class KDD {
 	/**
 	 * @return the dataPoints
 	 */
-	public List<Point3D> getDataPoints() {
-		return dataPoints;
-	}
+//	public List<Point3D> getDataPoints() {
+//		return dataPoints;
+//	}
 
 	/**
 	 * @param dataPoints the dataPoints to set
 	 */
-	public void setDataPoints(List<Point3D> dataPoints) {
-		this.dataPoints = dataPoints;
-	}
+//	public void setDataPoints(List<Point3D> dataPoints) {
+//		this.dataPoints = dataPoints;
+//	}
 	
-	public void addDataPoint(Point3D point)
-	{
-		this.dataPoints.add(point);
-	}
+//	public void addDataPoint(Point3D point)
+//	{
+//		this.dataPoints.add(point);
+//	}
 }

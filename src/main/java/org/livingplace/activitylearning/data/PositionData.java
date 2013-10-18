@@ -78,7 +78,10 @@ public class PositionData implements IData{
 		{
 			PositionData p = (PositionData) data;
 //			return euclidianDistance(p);
-			return euclidianDistance(p) / Helper.MAX_DIAGONAL;
+			if(this.fSpace.equals(p.fSpace))
+				return 0;
+			else
+				return euclidianDistance(p) / Helper.MAX_DIAGONAL;
 		}
 		return 1;
 	}

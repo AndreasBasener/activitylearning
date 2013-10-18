@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.livingplace.activitylearning.Helper;
+import org.livingplace.activitylearning.data.IData;
 
 public class PatternCluster {
 	
@@ -11,9 +12,14 @@ public class PatternCluster {
 
 	private List<Pattern> patternList;
 	
+	private static int globalClusterCount = 0;
+	
+	private int clusterNumber;
+	
 	public PatternCluster()
 	{
 		this.patternList = new ArrayList<Pattern>();
+		clusterNumber = globalClusterCount++;
 	}
 	
 	public PatternCluster(Pattern centroid)
@@ -72,9 +78,11 @@ public class PatternCluster {
 		for(Pattern p: patternList)
 		{
 			bool = p.containsPatternSequence(pattern);
+			if (bool)
+				return true;
 		}
 		
-		return bool;
+		return false;
 	}
 	
 	public boolean isSimilar(Pattern pattern)
@@ -116,6 +124,26 @@ public class PatternCluster {
 		}
 	}
 	
+	public double bestMatch(List<IData> data)
+	{
+		double[] match = new double[patternList.size()];
+		for(int i = 0; i < patternList.size(); i++)
+		{
+//			match[i] = patternList.get(i).bestMatch(data);
+			match[i] =patternList.get(i).distanceTo(new Pattern(new Sequence(data, 0, null), 0));
+		}
+		
+		double bestmatch = Double.MAX_VALUE;
+		
+		for(double d: match)
+		{
+			if(d < bestmatch)
+				bestmatch = d;
+		}
+		
+		return bestmatch;
+	}
+	
 	public String toString()
 	{
 		String s = "Clustersize: " + patternList.size() + "\n";
@@ -151,5 +179,19 @@ public class PatternCluster {
 	 */
 	public void setCentroid(Pattern centroid) {
 		this.centroid = centroid;
+	}
+
+	/**
+	 * @return the clusterNumber
+	 */
+	public int getClusterNumber() {
+		return clusterNumber;
+	}
+
+	/**
+	 * @param clusterNumber the clusterNumber to set
+	 */
+	public void setClusterNumber(int clusterNumber) {
+		this.clusterNumber = clusterNumber;
 	}
 }

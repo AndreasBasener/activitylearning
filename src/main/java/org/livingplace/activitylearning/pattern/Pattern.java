@@ -1,13 +1,22 @@
 package org.livingplace.activitylearning.pattern;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.livingplace.activitylearning.Helper;
+import org.livingplace.activitylearning.data.AlarmData;
 import org.livingplace.activitylearning.data.IData;
 
 public class Pattern implements Comparable<Pattern>{
 
+	public enum OrderType
+	{
+		VALUE,
+		SIZE
+	}
+	
 //	private List<Sequence> sequenceList;
 	/**
 	 * Die Sequenz, die dieses <code>Pattern</code> beschreibt.
@@ -28,6 +37,7 @@ public class Pattern implements Comparable<Pattern>{
 	private double meantime;
 	private double stddevtime;
 	
+	private static OrderType ordertype = OrderType.VALUE;
 	
 	private boolean used = false;
 	
@@ -156,12 +166,29 @@ public class Pattern implements Comparable<Pattern>{
 	}
 	
 	public int compareTo(Pattern o) {
-		if (o.value > value)
-			return 1;
-		else if (o.value == value)
-			return 0;
+		if(ordertype.equals(OrderType.VALUE))
+		{
+			if (o.value > value)
+				return 1;
+			else if (o.value == value)
+				return 0;
+			else
+				return -1;
+		}
+		else if(ordertype.equals(OrderType.SIZE))
+		{
+			if(o.getSequence().getDataSequence().size() < sequence.getDataSequence().size())
+				return 1;
+			else if(o.getSequence().getDataSequence().size() == sequence.getDataSequence().size())
+				return 0;
+			else
+				return -1;
+		}
 		else
-			return -1;
+		{
+//			System.out.println("fehler");
+			return 0;
+		}
 	}
 	
 	public double distanceTo(Pattern p)
@@ -294,6 +321,24 @@ public class Pattern implements Comparable<Pattern>{
 		
 		return true;
 	}
+	
+	public int numberOfTypes()
+	{
+		List<String> list = new ArrayList<String>();
+		for(IData d: sequence.getDataSequence())
+		{
+			if(!list.contains(d.getClass().getSimpleName()))
+				list.add(d.getClass().getSimpleName());
+		}
+		
+		return list.size();
+	}
+	
+	
+//	public double bestMatch(List<IData> data)
+//	{
+//		return sequence.bestMatch(data);
+//	}
 
 //	/**
 //	 * @return the sequenceList
@@ -405,6 +450,20 @@ public class Pattern implements Comparable<Pattern>{
 	 */
 	public void setUsed(boolean used) {
 		this.used = used;
+	}
+
+	/**
+	 * @return the ordertype
+	 */
+	public static OrderType getOrdertype() {
+		return ordertype;
+	}
+
+	/**
+	 * @param ordertype the ordertype to set
+	 */
+	public static void setOrdertype(OrderType type) {
+		ordertype = type;
 	}
 	
 	

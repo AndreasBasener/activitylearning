@@ -40,7 +40,6 @@
 	<dependency>
 		<groupId>org.livingplace</groupId>
 		<artifactId>scriptsimulator</artifactId>
-		<version>0.2.2-SNAPSHOT</version>
 	</dependency>
   </dependencies>
   <build>
@@ -62,4 +61,13 @@
   		</plugin>
   	</plugins>
   </build>
+  <dependencyManagement>
+  	<dependencies>
+  		<dependency>
+  			<groupId>org.livingplace</groupId>
+  			<artifactId>scriptsimulator</artifactId>
+  			<version>0.2.2-SNAPSHOT</version>
+  		</dependency>
+  	</dependencies>
+  </dependencyManagement>
 </project>

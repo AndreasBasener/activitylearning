@@ -23,7 +23,7 @@ public class App {
 		
 		GUI gui = new GUI();
 		
-		KDD kdd = new KDD("data\\output_woche_000prozent.csv");
+		KDD kdd = new KDD("data\\output_woche_000prozent_01.csv");
 //		KDD kdd = new KDD("C:\\workspacejuno\\scriptsimulator\\output.csv");
 		
 		Map<String,List<IData>> map = new HashMap<String, List<IData>>();

@@ -310,8 +310,8 @@ public class KDD {
 			if(p1.getSequence().getDataSequence().size() > 2 /*&& p1.numberOfTypes() > 1*/)
 				workList.add(p1);
 		}
-		Pattern.setOrdertype(OrderType.SIZE);
-		Collections.sort(workList);
+//		Pattern.setOrdertype(OrderType.SIZE);
+//		Collections.sort(workList);
 		System.out.println(workList.size() + " Pattern zum clustern übrig");
 		for (Pattern p: workList)
 		{

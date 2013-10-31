@@ -18,6 +18,13 @@ public class PowerData extends Data{
 		
 	}
 	
+	public PowerData(PowerID id, PowerState state, long time)
+	{
+		this.id = id;
+		this.state = state;
+		this.time = time;
+	}
+	
 	public double distanceTo(IData data) {
 		if(data == this)
 			return 0;

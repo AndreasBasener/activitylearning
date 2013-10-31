@@ -13,6 +13,12 @@ public class AlarmData  extends Data{
 		name = strarr[1];
 		description = strarr[2];
 	}
+	public AlarmData(String name, String description, long time)
+	{
+		this.name = name;
+		this.description = description;
+		this.time = time;
+	}
 
 	/**
 	 * Berechnet die Distanz zwischen diesem <code>AlarmData</code>-Objekts und data.

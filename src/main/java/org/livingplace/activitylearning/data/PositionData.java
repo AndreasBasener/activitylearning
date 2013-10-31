@@ -3,13 +3,13 @@ package org.livingplace.activitylearning.data;
 import org.livingplace.activitylearning.Helper;
 import org.livingplace.scriptsimulator.Point3D;
 
-public class PositionData implements IData{
+public class PositionData extends Data{
 
-	private long time;
+//	private long time;
 	
 	private double x,y;
 	
-	private Copy copy = Copy.FALSE;
+//	private Copy copy = Copy.FALSE;
 	
 	private FunctionalSpace fSpace;
 	
@@ -89,15 +89,15 @@ public class PositionData implements IData{
 	/**
 	 * @return the time
 	 */
-	public long getTime() {
-		return time;
-	}
-	/**
-	 * @param time the time to set
-	 */
-	public void setTime(long time) {
-		this.time = time;
-	}
+//	public long getTime() {
+//		return time;
+//	}
+//	/**
+//	 * @param time the time to set
+//	 */
+//	public void setTime(long time) {
+//		this.time = time;
+//	}
 	/**
 	 * @return the x
 	 */
@@ -131,15 +131,15 @@ public class PositionData implements IData{
 	/**
 	 * @return the copy
 	 */
-	public Copy getCopy() {
-		return copy;
-	}
-	/**
-	 * @param copy the copy to set
-	 */
-	public void setCopy(Copy copy) {
-		this.copy = copy;
-	}
+//	public Copy getCopy() {
+//		return copy;
+//	}
+//	/**
+//	 * @param copy the copy to set
+//	 */
+//	public void setCopy(Copy copy) {
+//		this.copy = copy;
+//	}
 	/**
 	 * @return the fSpace
 	 */

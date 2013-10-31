@@ -13,6 +13,12 @@ public class BedData extends Data{
 		time = Long.valueOf(strarr[0]);
 		state = SleepState.valueOf(strarr[1]);
 	}
+	
+	public BedData(SleepState state, long time)
+	{
+		this.state = state;
+		this.time = time;
+	}
 
 	/**
 	 * Liefert die Distanz zwischn diesem Objekt und <code>data</code>, nach folgender Matrix:</br>

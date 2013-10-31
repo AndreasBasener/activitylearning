@@ -30,6 +30,13 @@ public class StorageData implements IData{
 		
 	}
 	
+	public StorageData(StorageID id, StorageAction action, long time)
+	{
+		this.id = id;
+		this.action = action;
+		this.time = time;
+	}
+	
 	/**
 	 * Calculates the distance to the given <code>Object</code>. If the data is an instance of
 	 * <code>StorageData</code> and is equal to this instance, then the returned distance is 0. 

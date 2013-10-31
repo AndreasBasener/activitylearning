@@ -15,6 +15,11 @@ import org.livingplace.activitylearning.pattern.PatternCluster;
 import org.livingplace.activitylearning.pattern.Sequence;
 import org.livingplace.activitylearning.pattern.Pattern.OrderType;
 
+/**
+ * Mit dieser Klasse wird die Aktivitätenentdeckung durchgeführt.
+ * @author Andreas Basener
+ *
+ */
 public class KDD {
 	
 //	private String filename;
@@ -28,14 +33,29 @@ public class KDD {
 	//TODO: umbenennen
 	private List<IData> dataList;
 	
+	/**
+	 * Liste der Pattern
+	 */
 	private List<Pattern> patternList;
 	
+	/**
+	 * Liste der besten Pattern
+	 */
 	private List<Pattern> bestPattern;
 	
+	/**
+	 * Liste aller entdeckten Pattern
+	 */
 	private List<Pattern> discoveredPattern;
 	
+	/**
+	 * Liste der generierten Cluster
+	 */
 	private List<PatternCluster> clusterList;
 	
+	/**
+	 * Erzeugt eine neue KDD Instanz mit leeren Listen
+	 */
 	public KDD()
 	{
 		this.bestPattern = new ArrayList<Pattern>();
@@ -45,6 +65,11 @@ public class KDD {
 //		this.dataPoints = new ArrayList<Point3D>();
 	}
 	
+	/**
+	 * Erstellt eine neue KDD Instanz und füllt die Eventliste mit den Sensordaten, die in der
+	 * Datai unter filename enthalten sind. 
+	 * @param filename Dateiname der Ausgangsdatei
+	 */
 	public KDD(String filename)
 	{
 		this();
@@ -55,11 +80,14 @@ public class KDD {
 		System.out.println(dataList.size() + " Events eingelesen");
 	}
 	
+	/**
+	 * Mit dieser Methode wird die Aktivitätenentdeckung ausgeführt.
+	 */
 	public void dokdd()
 	{
 		boolean compressed = false;
 		int numCycles = 0;
-		do
+		do //Pattern entdecken
 		{
 			discoverPatterns();
 
@@ -88,6 +116,7 @@ public class KDD {
 		
 //		System.out.println(numCycles);
 //		removeDuplicates();
+		//Pattern clustern
 		clusterPattern();
 		
 		System.out.println(clusterList.size() + " Cluster erzeugt");
@@ -104,39 +133,48 @@ public class KDD {
 //				System.out.println(pc);
 	}
 	
+	/**
+	 * Mit dieser Methode werden die Pattern für die Clusterbildung entdeckt.
+	 */
 	private void discoverPatterns()
 	{
 		int index = 0;
 		boolean done = false;
-		
+
+		//Liste der in der jeweiligen Iteration entdeckten Pattern
 		List<Pattern> childList;
+		//Liste der innerhalb dieser Methode entdeckten Pattern
 		List<Pattern> localDiscoverdPattern = new ArrayList<Pattern>();
+		//Liste der intialen Pattern mit länge 1
 		List<Pattern> initalPattern = new ArrayList<Pattern>();
 		patternList = new ArrayList<Pattern>();
 		
 		// Initiale Pattern finden
 		for(IData d: dataList)
 		{
-			if(!d.getClass().equals(Copy.PREDEFINED))
+			if(!d.getClass().equals(Copy.PREDEFINED)) //Ist das Event bereits vordefiniert worden?
 			{
-				Sequence seq = new Sequence(d, index, dataList);
+				Sequence seq = new Sequence(d, index, dataList); //Sequenz mit Länge 1 erstellen
 				boolean containsSequence = false;
-				for(Pattern p: initalPattern)
+				for(Pattern p: initalPattern)//Ist die Sequenz bereits enteckt worden?
 				{
 					containsSequence = p.containsSequence(seq);
 					if(containsSequence)
 					{
+						//Bei sich wiederholenden Events den Counter erhöhen
 						p.increasePatternCount(index);
 						break;
 					}
 				}
 				if(!containsSequence)
 				{
+					//Neue Sequenz in Liste speichern
 					initalPattern.add(new Pattern(seq,index));
 				}
 				index++;
 			}
 		}
+		//Nur Pattern mit einer Minddeshäufigkeit von 1 weiter verwenden
 		for(Pattern p: initalPattern)
 		{
 			if(p.getPatternCount() > 1)
@@ -147,36 +185,35 @@ public class KDD {
 		//Initiale Pattern evaluieren
 		for(Pattern p : patternList)
 		{
-//			p.evaluate(positionList.size());
 			p.evaluate(dataList.size());
 		}
 		
 		List<Pattern> parentList = patternList;
+		//Inklemetell die initialen Pattern erweitern und die so entdeckten Muster speichern.
+		//Solange wiederholen, bis die Pattern nicht mehr erweitert werden können. 
 		while(!done)
 		{
-			childList = new ArrayList<Pattern>();
-//			System.out.println("Parentpattern " + parentList.size());
-			
+			//Liste der erweiterten Pattern
 			List<Pattern> extendedList = new ArrayList<Pattern>();
+			childList = new ArrayList<Pattern>();
+			
+			//Pattern aus der parentList erweitern und in der Liste extendedList speichern
 			for(int i=0; i < parentList.size(); i++)
 			{
 				Pattern parentPattern = parentList.get(i);
-//				System.out.println(parentPattern);
 				Pattern ep = new Pattern(parentPattern);
 				boolean extended = ep.extend();
-//				System.out.println(ep);
 				if(extended)
 				{
 					extendedList.add(ep);
 				}
+				//nur neue Pattern hinzufügen
 				if(!localDiscoverdPattern.contains(parentPattern))
 					localDiscoverdPattern.add(parentPattern);
-//				else
-//					System.out.println("gibt es schon");
 			}
+			//für die erweiterten Pattern herausfinden, wie oft sie in der Eventliste vorkommen
 			for(Pattern p: extendedList)
 			{
-//				System.out.println("ex: " +p);
 				for(int i = 0; i < (dataList.size() - p.getSequence().getDataSequence().size() + 1); i++)
 				{
 					List<IData> slist = new ArrayList<IData>();
@@ -189,17 +226,18 @@ public class KDD {
 						p.increasePatternCount(i);
 				}
 			}
+			//erwiterte Pattern, die sich mindestens 2 Mal wiederholen, evaluieren und in die
+			//childList speichern
 			for(int i=0; i< extendedList.size(); i++)
 			{
 				Pattern p = extendedList.get(i);
 				p.evaluate(dataList.size()); //Evtl evaluate mit in die if-Abfrage
-//				System.out.printlng("Muster: " + i + " " + p);
 				if(p.getPatternCount() > 1)
 				{
 					childList.add(p);
 				}
 			}
-			
+			//kommt kein erweitertes Pattern häufig genug vor, dann abbrechen
 			if(childList.size() == 0)
 			{
 				done = true;
@@ -210,19 +248,19 @@ public class KDD {
 			}
 		}
 		patternList = localDiscoverdPattern;
-//		System.out.println("Entdeckte Pattern: " + localDiscoverdPattern.size());
-//		for (Pattern p : localDiscoverdPattern)
-//		{
-//			System.out.println(p);
-//		}
+
 		for(Pattern p: localDiscoverdPattern)
 		{
 			if(!discoveredPattern.contains(p))
 				discoveredPattern.add(p);
 		}
-//		discoveredPattern.addAll(localDiscoverdPattern);
 	}
 	
+	/**
+	 * Pattern in der Eventliste markieren
+	 * @param pattern das zu markierende Pattern
+	 * @return Anzahl der Events, die nach der markierung übrigbleiben
+	 */
 	private int markEvents(Pattern pattern)
 	{
 		int numnewevents = dataList.size();
@@ -272,6 +310,11 @@ public class KDD {
 		return numnewevents;
 	}
 	
+	/**
+	 * Pattern in der Eventliste komprimieren.
+	 * @param pattern das zu komprimierende Pattern
+	 * @return wurde komprimiert oder nicht
+	 */
 	public boolean compressPattern(Pattern pattern)
 	{
 		List<IData> newList = new ArrayList<IData>();
@@ -300,31 +343,41 @@ public class KDD {
 		return true;
 	}
 
+	/**
+	 * Clusterbildung der entdeckten Pattern
+	 */
 	public void clusterPattern()
 	{
-		
+		//Hilfsliste für die entdeckten Pattern zur Clusterbildung
 		List<Pattern> workList = new ArrayList<Pattern>();
 		
+		//Nur Pattern für die Clusterbildung verwenden, die mindestens die Länge 3 Mal haben
 		for(Pattern p1: discoveredPattern)
 		{
 			if(p1.getSequence().getDataSequence().size() > 2 /*&& p1.numberOfTypes() > 1*/)
 				workList.add(p1);
 		}
+		
 //		Pattern.setOrdertype(OrderType.SIZE);
 //		Collections.sort(workList);
+		
 		System.out.println(workList.size() + " Pattern zum clustern übrig");
+		//Clusterbildung
 		for (Pattern p: workList)
 		{
 			boolean contains = false;
 			boolean createnew = true;
+			//Distanzen des aktuellen Pattern zu allen Clusterzentren
 			double[] distanceToPatternCluster = new double[clusterList.size()];
 			int index = 0;
 			for(PatternCluster pc: clusterList)
 			{
+				//Ist das Pattern im Cluster bereits enthalten?
 				contains = pc.containsPattern(p);
 				if(contains)
 					break;
 				
+				//Ist die Patternsequenz in einem der Pattern des Cluster komplett enthalten?
 				contains = pc.containsPatternSequence(p);
 				if(contains)
 				{
@@ -336,12 +389,14 @@ public class KDD {
 				distanceToPatternCluster[index] = sim;
 				index++;
 			}
+			//Ist das Pattern bereits enthalten, mit dem nächsten Pattern fortfahren.
 			if(contains)
 				continue;
 			
 			int mindistindex = Integer.MAX_VALUE;
 			double mindist = Double.MAX_VALUE;
 			index = 0;
+			//Die kleinste Distanz zu den Clusterzentren und das dazugehörige Cluster herausfinden.
 			for(double d: distanceToPatternCluster)
 			{
 				if(d < mindist)
@@ -352,21 +407,25 @@ public class KDD {
 				index++;
 			}
 			
+			//Ist die Distanz zu dem Cluster klein genug?
 			if(mindist <= Helper.MIN_SIMILAR_CLUSTER && index < Integer.MAX_VALUE)
 			{
 				clusterList.get(mindistindex).addPattern(p);
 				createnew = false;
 			}
-
+			//Konnte das Pattern keinem Cluster zugeordnet werden, wird ein neues Clustermit dem 
+			//Pattern erzeugt.
 			if(createnew)
 			{
 				PatternCluster cluster = new PatternCluster(p);
-//				cluster.addPattern(p);
 				clusterList.add(cluster);
 			}
 		}
 	}
 	
+	/**
+	 * Mit dieser Methode können die Cluster weiter zusammengefasst werden. 
+	 */
 	private void compressCluster()
 	{
 		boolean maxCompression = true;
@@ -440,20 +499,27 @@ public class KDD {
 		System.out.println("Cluster fertig komprimiert. " + clist.size() + " Cluster übrig");
 	}
 	
+	/**
+	 * Mit dieser Methode wird die Datei aus filename ausgelesen. Die darin enthaltenen Sensordaten werden
+	 * in eine Eventliste gespeichert, die anschließend zurückgegben wird.
+	 * @param filename dir zu parsende Datei
+	 * @return Liste der erstellten Events
+	 */
 	public List<IData> readFile(String filename)
 	{
 		if(filename == null || filename.equals(""))
 			return null;
-		
+		//Zielliste der Events
 		List<IData> sequence = new ArrayList<IData>();
 		
 		try {
 			FileReader reader = new FileReader(filename);
 			BufferedReader br = new BufferedReader(reader);
 			String line;
-			try {
+			try {//Zeie für Zeile auslesen 
 				while((line = br.readLine())!=null)
 				{
+					//Die Sensordaten sind mmit einem Semikolon getrennt
 					String[] strarr = line.split(";", 2);
 					if(strarr.length == 2)
 					{
@@ -471,12 +537,12 @@ public class KDD {
 							sequence.add(new DoorBellData(data));
 						else if(str.equals("Door"))
 							sequence.add(new DoorData(data));
-						else if(str.equals("Ubisense"))
-						{
-							PositionData pd = new PositionData(data);
-							sequence.add(pd);
-//							addDataPoint(new Point3D(pd.getX(), pd.getY(), 0));
-						}
+//						if(str.equals("Ubisense"))
+//						{
+//							PositionData pd = new PositionData(data);
+//							sequence.add(pd);
+////							addDataPoint(new Point3D(pd.getX(), pd.getY(), 0));
+//						}
 						else if(str.equals("Power"))
 							sequence.add(new PowerData(data));
 						else if(str.equals("Storage"))
@@ -486,8 +552,6 @@ public class KDD {
 						else if(str.equals("Window"))
 							sequence.add(new WindowData(data));
 					}
-//					dataList.add(new PositionData(line));
-//					System.out.println(line);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -496,12 +560,6 @@ public class KDD {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
-//		System.out.println(filename);
-//		for(IData d: sequence)
-//		{
-//			System.out.println(d);
-//		}
 		
 		return sequence;
 	}

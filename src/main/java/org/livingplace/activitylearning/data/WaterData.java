@@ -17,6 +17,13 @@ public class WaterData extends Data{
 		state = WaterState.valueOf(strarr[2]);
 	}
 	
+	public WaterData(WaterID id, WaterState state, long time)
+	{
+		this.id = id;
+		this.state = state;
+		this.time = time;
+	}
+	
 	public double distanceTo(IData data) {
 		if(data == this)
 			return 0;

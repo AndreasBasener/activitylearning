@@ -15,6 +15,13 @@ public class DoorData extends Data{
 		
 	}
 	
+	public DoorData(String name, String description, long time)
+	{
+		this.name = name;
+		this.description = description;
+		this.time = time;
+	}
+	
 	public double distanceTo(IData data) {
 		if(data == this)
 			return 0;

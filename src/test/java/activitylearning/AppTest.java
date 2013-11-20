@@ -3,8 +3,8 @@ package activitylearning;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.livingplace.activitylearning.data.IData;
-import org.livingplace.activitylearning.data.PositionData;
+import org.livingplace.activitylearning.event.IEvent;
+import org.livingplace.activitylearning.event.PositionEvent;
 import org.livingplace.activitylearning.pattern.Pattern;
 import org.livingplace.activitylearning.pattern.Sequence;
 
@@ -39,17 +39,17 @@ public class AppTest extends TestCase {
 	public void testApp() {
 //		assertTrue(true);
 		
-		List<IData> poslist1 = new ArrayList<IData>();
-		List<IData> poslist2 = new ArrayList<IData>();
+		List<IEvent> poslist1 = new ArrayList<IEvent>();
+		List<IEvent> poslist2 = new ArrayList<IEvent>();
 		
 		for(int i = 0; i < 10 ; i++)
 		{
-			poslist1.add(new PositionData(0, 0, i));
+			poslist1.add(new PositionEvent(0, 0, i));
 		}
 
 		for(int i = 2; i < 10 ; i++)
 		{
-			poslist1.add(new PositionData(0, 0, i));
+			poslist1.add(new PositionEvent(0, 0, i));
 		}
 		
 		Sequence seq1 = new Sequence(poslist1, 0, null);

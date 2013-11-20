@@ -3,34 +3,34 @@ package org.livingplace.activitylearning.pattern;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.livingplace.activitylearning.data.IData;
+import org.livingplace.activitylearning.event.IEvent;
 
 public class Sequence {
 	
 	private int startIndex;
 	
-	private List<IData> dataList;
-	private List<IData> dataSequence;
+	private List<IEvent> dataList;
+	private List<IEvent> dataSequence;
 	
 	public Sequence()
 	{
-		this.dataSequence = new ArrayList<IData>();
+		this.dataSequence = new ArrayList<IEvent>();
 	}
 	
-	public Sequence(IData data, int index, List<IData> source)
+	public Sequence(IEvent event, int index, List<IEvent> source)
 	{
 		this();
-		dataSequence.add(data);
+		dataSequence.add(event);
 		this.startIndex = index;
 		this.dataList = source;
 	}
 	
-	public Sequence(List<IData> data, int index, List<IData> source)
+	public Sequence(List<IEvent> event, int index, List<IEvent> source)
 	{
 		this();
 		this.startIndex = index;
 		this.dataList = source;
-		this.dataSequence.addAll(data);
+		this.dataSequence.addAll(event);
 	}
 	
 	public Sequence(Sequence sequence)
@@ -165,7 +165,7 @@ public class Sequence {
 	public String toString()
 	{
 		String s = "Index: " + startIndex + " Sequence: ";
-		for(IData d: dataSequence)
+		for(IEvent d: dataSequence)
 		{
 			s += d.toShortString() + " ";
 		}
@@ -189,28 +189,28 @@ public class Sequence {
 	/**
 	 * @return the dataList
 	 */
-	public List<IData> getDataList() {
+	public List<IEvent> getDataList() {
 		return dataList;
 	}
 
 	/**
 	 * @param dataList the dataList to set
 	 */
-	public void setDataList(List<IData> dataList) {
+	public void setDataList(List<IEvent> dataList) {
 		this.dataList = dataList;
 	}
 
 	/**
 	 * @return the dataSequence
 	 */
-	public List<IData> getDataSequence() {
+	public List<IEvent> getDataSequence() {
 		return dataSequence;
 	}
 
 	/**
 	 * @param dataSequence the dataSequence to set
 	 */
-	public void setDataSequence(List<IData> dataSequence) {
+	public void setDataSequence(List<IEvent> dataSequence) {
 		this.dataSequence = dataSequence;
 	}
 	

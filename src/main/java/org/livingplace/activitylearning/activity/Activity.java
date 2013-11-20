@@ -1,69 +1,35 @@
 package org.livingplace.activitylearning.activity;
 
-import org.livingplace.activitylearning.pattern.PatternCluster;
-
-import com.google.gson.Gson;
+import org.livingplace.activitylearning.pattern.Cluster;
 
 /**
- * 
+ * 	Wrapperklasse für PatternCluster. Acrivity hat einen Json-Converter names Activityconverter.
+ *  Dort passiert die ganze Magie, um die Aktivität als Json-Objekt weiter geben zu können.
+ *  
  * @author Andreas Basener
  *
  */
 public class Activity {
 	
-	private PatternCluster pc;
-	private Gson gson;
-	
-	private String gsonString;
+	private Cluster pc;
 
-	public Activity(PatternCluster pc, Gson gson)
+	public Activity(Cluster pc)
 	{
 		this.pc = pc;
-		this.gson = gson;
-		
-		gsonString = gson.toJson(this);
 	}
-
+	
 	/**
 	 * @return the pc
 	 */
-	public PatternCluster getPc() {
+	public Cluster getPc() {
 		return pc;
 	}
 
 	/**
 	 * @param pc the pc to set
 	 */
-	public void setPc(PatternCluster pc) {
+	public void setPc(Cluster pc) {
 		this.pc = pc;
-	}
-
-	/**
-	 * @return the gson
-	 */
-	public Gson getGson() {
-		return gson;
-	}
-
-	/**
-	 * @param gson the gson to set
-	 */
-	public void setGson(Gson gson) {
-		this.gson = gson;
-	}
-
-	/**
-	 * @return the gsonString
-	 */
-	public String getGsonString() {
-		return gsonString;
-	}
-
-	/**
-	 * @param gsonString the gsonString to set
-	 */
-	public void setGsonString(String gsonString) {
-		this.gsonString = gsonString;
 	}
 
 }

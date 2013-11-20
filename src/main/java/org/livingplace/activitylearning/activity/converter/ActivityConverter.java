@@ -8,15 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.livingplace.activitylearning.activity.Activity;
-import org.livingplace.activitylearning.data.IData;
+import org.livingplace.activitylearning.event.IEvent;
 import org.livingplace.activitylearning.pattern.Pattern;
-import org.livingplace.activitylearning.pattern.PatternCluster;
+import org.livingplace.activitylearning.pattern.Cluster;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
@@ -40,19 +42,35 @@ JsonDeserializer<Activity>{
 			JsonSerializationContext context) {
 
 		JsonObject object = new JsonObject();
-		PatternCluster pc = src.getPc();
+		Cluster pc = src.getPc();
 		
+		//List types wird benötigt, weil JsonArray kein contains unterstützt.
 		List<String> types = new ArrayList<String>();
+		JsonArray typesArray = new JsonArray();
+		
+//		List<JsonElement> patternElementList = new ArrayList<JsonElement>();
+		JsonArray patternArray = new JsonArray();
 		
 		for(Pattern p: pc.getPatternList())
 		{
-			for(IData d: p.getSequence().getDataSequence())
+			JsonArray dataArray = new JsonArray();
+			for(IEvent d: p.getSequence().getDataSequence())
 			{
 				String typename = d.getClass().getSimpleName();
 				if(!types.contains(typename))
+				{
 					types.add(typename);
+					typesArray.add(new JsonPrimitive(typename));
+				}
+				JsonElement patternElement = context.serialize(d);
+//				patternElementList.add(patternElement);
+				dataArray.add(patternElement);
 			}
+			patternArray.add(dataArray);
 		}
+		
+		object.add("containedTypes", typesArray);
+		object.add("patternList", patternArray);
 		
 		return object;
 	}

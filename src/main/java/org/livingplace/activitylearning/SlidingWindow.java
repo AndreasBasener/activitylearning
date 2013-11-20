@@ -2,7 +2,7 @@ package org.livingplace.activitylearning;
 
 import java.util.List;
 
-import org.livingplace.activitylearning.data.PositionData;
+import org.livingplace.activitylearning.event.PositionEvent;
 
 @Deprecated
 public class SlidingWindow {
@@ -13,24 +13,24 @@ public class SlidingWindow {
 	
 	private int listSize;
 	
-	private List<PositionData> positionData;
+	private List<PositionEvent> positionEvent;
 	
-	private PositionData window[];
+	private PositionEvent window[];
 	
-	public SlidingWindow(int size, List<PositionData> data)
+	public SlidingWindow(int size, List<PositionEvent> data)
 	{
 		this.windowSize = size;
-		this.positionData = data;
+		this.positionEvent = data;
 		this.windowPosition = 0;
 		this.reachedEnd = false;
 		
-		this.listSize = positionData.size();
+		this.listSize = positionEvent.size();
 		
-		window = new PositionData[size];
+		window = new PositionEvent[size];
 		
 		for(int i = 0; i < windowSize && i < listSize; i++)
 		{
-			window[i] = positionData.get(i);
+			window[i] = positionEvent.get(i);
 			if(i == listSize -1)
 				reachedEnd = true;
 		}
@@ -42,7 +42,7 @@ public class SlidingWindow {
 		{
 			for(int i = 0; i < windowSize; i++)
 			{
-				window[i] = positionData.get(windowPosition + i + 1);
+				window[i] = positionEvent.get(windowPosition + i + 1);
 				
 			}
 			windowPosition++;

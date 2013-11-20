@@ -2,7 +2,7 @@ package org.livingplace.activitylearning.activity.converter;
 
 import java.lang.reflect.Type;
 
-import org.livingplace.activitylearning.data.PositionData;
+import org.livingplace.activitylearning.event.PositionEvent;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -12,10 +12,10 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-public class PositionConverter implements JsonSerializer<PositionData>,
-JsonDeserializer<PositionData>{
+public class PositionConverter implements JsonSerializer<PositionEvent>,
+JsonDeserializer<PositionEvent>{
 
-	public PositionData deserialize(JsonElement json, Type typeOfT,
+	public PositionEvent deserialize(JsonElement json, Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException {
 		
 		JsonObject object = json.getAsJsonObject();
@@ -25,10 +25,10 @@ JsonDeserializer<PositionData>{
 		
 		long time = object.get("time").getAsLong();
 		
-		return new PositionData(time,x,y);
+		return new PositionEvent(time,x,y);
 	}
 
-	public JsonElement serialize(PositionData src, Type typeOfSrc,
+	public JsonElement serialize(PositionEvent src, Type typeOfSrc,
 			JsonSerializationContext context) {
 
 		JsonObject object = new JsonObject();

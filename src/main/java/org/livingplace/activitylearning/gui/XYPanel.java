@@ -16,10 +16,10 @@ import java.util.Random;
 
 import javax.swing.JPanel;
 
-import org.livingplace.activitylearning.data.IData;
-import org.livingplace.activitylearning.data.PositionData;
+import org.livingplace.activitylearning.event.IEvent;
+import org.livingplace.activitylearning.event.PositionEvent;
 import org.livingplace.activitylearning.pattern.Pattern;
-import org.livingplace.activitylearning.pattern.PatternCluster;
+import org.livingplace.activitylearning.pattern.Cluster;
 import org.livingplace.scriptsimulator.Point3D;
 /**
  * 
@@ -50,7 +50,7 @@ public class XYPanel extends JPanel
 	
 	private Random random;
 
-	private List<PatternCluster> patternCluster;
+	private List<Cluster> cluster;
 	
 	private Image floorplan;
 	
@@ -66,7 +66,7 @@ public class XYPanel extends JPanel
 
 		this.point2DList = new ArrayList<Point2D>();
 		this.point3DList = new ArrayList<Point3D>();
-		this.patternCluster = new ArrayList<PatternCluster>();
+		this.cluster = new ArrayList<Cluster>();
 		
 		this.random = new Random();
 		
@@ -184,7 +184,7 @@ public class XYPanel extends JPanel
 			g2d.drawLine((int)x + offset, (int) y2, (int) x + offset, (int) y2);
 		}
 		
-		for(PatternCluster pc: patternCluster)
+		for(Cluster pc: cluster)
 		{
 			if (pc.getPatternList().size() < 1)
 				continue;
@@ -245,12 +245,12 @@ public class XYPanel extends JPanel
 			
 			for(Pattern p: pc.getPatternList())
 			{
-				List<IData> plist = p.getSequence().getDataSequence();
-				for(IData data: plist)
+				List<IEvent> plist = p.getSequence().getDataSequence();
+				for(IEvent event: plist)
 				{
-					if (data instanceof PositionData)
+					if (event instanceof PositionEvent)
 					{
-						PositionData pos = (PositionData) data;
+						PositionEvent pos = (PositionEvent) event;
 						double y = d.getHeight() - pos.getY() * ySteps - offset;
 						g2d.drawLine((int) (pos.getX() * xSteps) + offset, (int) y, 
 								(int) (pos.getX() * xSteps) + offset, (int) y);
@@ -272,9 +272,9 @@ public class XYPanel extends JPanel
 		point3DList.add(point);
 	}
 	
-	public void setPatternCluster(List<PatternCluster> patternCluster)
+	public void setPatternCluster(List<Cluster> cluster)
 	{
-		this.patternCluster = patternCluster;
+		this.cluster = cluster;
 	}
 
 }

@@ -2,7 +2,7 @@ package org.livingplace.activitylearning.activity.converter;
 
 import java.lang.reflect.Type;
 
-import org.livingplace.activitylearning.data.DoorData;
+import org.livingplace.activitylearning.event.DoorEvent;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -12,10 +12,10 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-public class DoorConverter implements JsonSerializer<DoorData>,
-JsonDeserializer<DoorData>{
+public class DoorConverter implements JsonSerializer<DoorEvent>,
+JsonDeserializer<DoorEvent>{
 
-	public DoorData deserialize(JsonElement json, Type typeOfT,
+	public DoorEvent deserialize(JsonElement json, Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException {
 
 		JsonObject object = json.getAsJsonObject();
@@ -24,10 +24,10 @@ JsonDeserializer<DoorData>{
 		String descr = object.get("description").getAsString();
 		long time = object.get("time").getAsLong();
 		
-		return new DoorData(name, descr, time);
+		return new DoorEvent(name, descr, time);
 	}
 
-	public JsonElement serialize(DoorData src, Type typeOfSrc,
+	public JsonElement serialize(DoorEvent src, Type typeOfSrc,
 			JsonSerializationContext context) {
 		
 		JsonObject object = new JsonObject();

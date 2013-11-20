@@ -2,7 +2,7 @@ package org.livingplace.activitylearning.activity.converter;
 
 import java.lang.reflect.Type;
 
-import org.livingplace.activitylearning.data.StorageData;
+import org.livingplace.activitylearning.event.StorageEvent;
 import org.livingplace.scriptsimulator.script.entry.StorageEntry.StorageAction;
 import org.livingplace.scriptsimulator.script.entry.StorageEntry.StorageID;
 
@@ -14,10 +14,10 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-public class StorageConverter implements JsonSerializer<StorageData>,
-JsonDeserializer<StorageData>{
+public class StorageConverter implements JsonSerializer<StorageEvent>,
+JsonDeserializer<StorageEvent>{
 
-	public StorageData deserialize(JsonElement json, Type typeOfT,
+	public StorageEvent deserialize(JsonElement json, Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException {
 
 		JsonObject object = json.getAsJsonObject();
@@ -26,10 +26,10 @@ JsonDeserializer<StorageData>{
 		StorageAction action = StorageAction.valueOf(object.get("action").getAsString());
 		long time = object.get("time").getAsLong();
 		
-		return new StorageData(id,action,time);
+		return new StorageEvent(id,action,time);
 	}
 
-	public JsonElement serialize(StorageData src, Type typeOfSrc,
+	public JsonElement serialize(StorageEvent src, Type typeOfSrc,
 			JsonSerializationContext context) {
 
 		JsonObject object = new JsonObject();

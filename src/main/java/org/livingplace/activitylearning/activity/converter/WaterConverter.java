@@ -2,7 +2,7 @@ package org.livingplace.activitylearning.activity.converter;
 
 import java.lang.reflect.Type;
 
-import org.livingplace.activitylearning.data.WaterData;
+import org.livingplace.activitylearning.event.WaterEvent;
 import org.livingplace.scriptsimulator.script.entry.WaterEntry.WaterID;
 import org.livingplace.scriptsimulator.script.entry.WaterEntry.WaterState;
 
@@ -14,10 +14,10 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-public class WaterConverter implements JsonSerializer<WaterData>,
-JsonDeserializer<WaterData>{
+public class WaterConverter implements JsonSerializer<WaterEvent>,
+JsonDeserializer<WaterEvent>{
 
-	public WaterData deserialize(JsonElement json, Type typeOfT,
+	public WaterEvent deserialize(JsonElement json, Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException {
 
 		JsonObject object = json.getAsJsonObject();
@@ -26,10 +26,10 @@ JsonDeserializer<WaterData>{
 		WaterState state = WaterState.valueOf(object.get("state").getAsString());
 		long time = object.get("time").getAsLong();
 		
-		return new WaterData(id,state,time);
+		return new WaterEvent(id,state,time);
 	}
 
-	public JsonElement serialize(WaterData src, Type typeOfSrc,
+	public JsonElement serialize(WaterEvent src, Type typeOfSrc,
 			JsonSerializationContext context) {
 
 		JsonObject object = new JsonObject();

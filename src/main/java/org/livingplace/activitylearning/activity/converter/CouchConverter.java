@@ -2,7 +2,7 @@ package org.livingplace.activitylearning.activity.converter;
 
 import java.lang.reflect.Type;
 
-import org.livingplace.activitylearning.data.CouchData;
+import org.livingplace.activitylearning.event.CouchEvent;
 import org.livingplace.scriptsimulator.script.entry.CouchEntry.CouchID;
 
 import com.google.gson.JsonDeserializationContext;
@@ -13,10 +13,10 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-public class CouchConverter implements JsonSerializer<CouchData>,
-JsonDeserializer<CouchData>{
+public class CouchConverter implements JsonSerializer<CouchEvent>,
+JsonDeserializer<CouchEvent>{
 
-	public CouchData deserialize(JsonElement json, Type typeOfT,
+	public CouchEvent deserialize(JsonElement json, Type typeOfT,
 			JsonDeserializationContext context) throws JsonParseException {
 		
 		JsonObject object = json.getAsJsonObject();
@@ -24,10 +24,10 @@ JsonDeserializer<CouchData>{
 		CouchID id = CouchID.valueOf(object.get("id").getAsString());
 		long time = object.get("time").getAsLong();
 		
-		return new CouchData(id,time);
+		return new CouchEvent(id,time);
 	}
 
-	public JsonElement serialize(CouchData src, Type typeOfSrc,
+	public JsonElement serialize(CouchEvent src, Type typeOfSrc,
 			JsonSerializationContext context) {
 
 		JsonObject object = new JsonObject();

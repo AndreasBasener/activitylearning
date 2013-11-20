@@ -15,7 +15,7 @@ import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
 
-import org.livingplace.activitylearning.pattern.PatternCluster;
+import org.livingplace.activitylearning.pattern.Cluster;
 import org.livingplace.scriptsimulator.Point3D;
 
 public class GUI {
@@ -24,11 +24,11 @@ public class GUI {
 	
 	int x = 550, y = 700, xScale = 12, yScale = 17;
 	
-	private List<PatternCluster> patternClusterList;
+	private List<Cluster> patternClusterList;
 	
 	public GUI()
 	{
-		this.patternClusterList = new ArrayList<PatternCluster>();
+		this.patternClusterList = new ArrayList<Cluster>();
 		
 		//int xScale = 12, yScale = 17;
 		graph = new XYFrame(x,y,xScale,yScale);
@@ -49,22 +49,22 @@ public class GUI {
 		graph.addPoints(list);
 	}
 	
-	public void addPatternCluster(PatternCluster patternCluster)
+	public void addPatternCluster(Cluster cluster)
 	{
-		this.patternClusterList.add(patternCluster);
+		this.patternClusterList.add(cluster);
 	}
 
 	/**
 	 * @return the patternClusterList
 	 */
-	public List<PatternCluster> getPatternClusterList() {
+	public List<Cluster> getPatternClusterList() {
 		return patternClusterList;
 	}
 
 	/**
 	 * @param patternClusterList the patternClusterList to set
 	 */
-	public void setPatternClusterList(List<PatternCluster> patternClusterList) {
+	public void setPatternClusterList(List<Cluster> patternClusterList) {
 		this.patternClusterList = patternClusterList;
 		graph.setPatternClusterList(patternClusterList);
 	}

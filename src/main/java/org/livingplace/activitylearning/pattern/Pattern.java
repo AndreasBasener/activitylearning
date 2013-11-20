@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.livingplace.activitylearning.Helper;
-import org.livingplace.activitylearning.data.AlarmData;
-import org.livingplace.activitylearning.data.IData;
+import org.livingplace.activitylearning.event.AlarmEvent;
+import org.livingplace.activitylearning.event.IEvent;
 
 public class Pattern implements Comparable<Pattern>{
 
@@ -110,14 +110,14 @@ public class Pattern implements Comparable<Pattern>{
 		}
 		else
 		{
-			for(IData d : sequence.getDataSequence())
+			for(IEvent d : sequence.getDataSequence())
 			{
 				sum += d.getTime();
 			}
 			meantime = (double) sum / (double) sequence.getDataSequence().size();
 			
 			sum = 0;
-			for(IData d : sequence.getDataSequence())
+			for(IEvent d : sequence.getDataSequence())
 			{
 				diff = d.getTime() - this.meantime;
 				sum += diff * diff;
@@ -302,8 +302,8 @@ public class Pattern implements Comparable<Pattern>{
 	public boolean containsPatternSequence(Pattern pattern)
 	{
 		boolean bool = false;
-		List<IData> s1 = sequence.getDataSequence();
-		List<IData> s2 = pattern.getSequence().getDataSequence();
+		List<IEvent> s1 = sequence.getDataSequence();
+		List<IEvent> s2 = pattern.getSequence().getDataSequence();
 		
 		int index = s1.indexOf(s2.get(0));
 		
@@ -325,7 +325,7 @@ public class Pattern implements Comparable<Pattern>{
 	public int numberOfTypes()
 	{
 		List<String> list = new ArrayList<String>();
-		for(IData d: sequence.getDataSequence())
+		for(IEvent d: sequence.getDataSequence())
 		{
 			if(!list.contains(d.getClass().getSimpleName()))
 				list.add(d.getClass().getSimpleName());

@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.livingplace.activitylearning.activity.Activity;
 import org.livingplace.activitylearning.event.IEvent;
+import org.livingplace.activitylearning.event.PositionEvent;
 import org.livingplace.activitylearning.pattern.Pattern;
 import org.livingplace.activitylearning.pattern.Cluster;
 
@@ -50,6 +51,9 @@ JsonDeserializer<Activity>{
 		
 //		List<JsonElement> patternElementList = new ArrayList<JsonElement>();
 		JsonArray patternArray = new JsonArray();
+
+		List<String> fspacearray = new ArrayList<String>();
+		JsonArray funcspaceArray = new JsonArray();
 		
 		for(Pattern p: pc.getPatternList())
 		{
@@ -62,6 +66,19 @@ JsonDeserializer<Activity>{
 					types.add(typename);
 					typesArray.add(new JsonPrimitive(typename));
 				}
+				
+				if(d instanceof PositionEvent)
+				{
+					PositionEvent event = (PositionEvent) d;
+					String fspace = event.getfSpace().getLabel().toString();
+					System.out.println(fspace);
+					if(!fspacearray.contains(fspace))
+					{
+						fspacearray.add(fspace);
+						funcspaceArray.add(new JsonPrimitive(fspace));
+					}
+				}
+				
 				JsonElement patternElement = context.serialize(d);
 //				patternElementList.add(patternElement);
 				dataArray.add(patternElement);
@@ -69,7 +86,13 @@ JsonDeserializer<Activity>{
 			patternArray.add(dataArray);
 		}
 		
+		double meantime = src.getPc().getCentroid().getMeantime();
+		double stddev = src.getPc().getCentroid().getStddevtime();
+		
 		object.add("containedTypes", typesArray);
+		object.addProperty("meantime", meantime);
+		object.addProperty("stddevtime", stddev);
+		object.add("functionalSpaces", funcspaceArray);
 		object.add("patternList", patternArray);
 		
 		return object;

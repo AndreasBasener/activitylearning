@@ -1,12 +1,7 @@
 package org.livingplace.activitylearning.pattern;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import org.livingplace.activitylearning.Helper;
-import org.livingplace.activitylearning.event.AlarmEvent;
 import org.livingplace.activitylearning.event.IEvent;
 
 public class Pattern implements Comparable<Pattern>{
@@ -199,14 +194,14 @@ public class Pattern implements Comparable<Pattern>{
 		int size1 = s1.getDataSequence().size();
 		int size2 = s2.getDataSequence().size();
 		
-		double mean1 = this.meantime;
-		double mean2 = p.meantime;
-		double mean = 0;
-		
-		if(mean1 > mean2)
-			mean = mean2 / mean1;
-		else
-			mean = mean1 / mean2;
+//		double mean1 = this.meantime;
+//		double mean2 = p.meantime;
+//		double mean = 0;
+//		
+//		if(mean1 > mean2)
+//			mean = mean2 / mean1;
+//		else
+//			mean = mean1 / mean2;
 		
 		int sizediff = size1 - size2; 
 		if(sizediff < 0)
@@ -232,16 +227,16 @@ public class Pattern implements Comparable<Pattern>{
 		}
 		
 		double mindist = Double.MAX_VALUE;
-		double meandist = 0;
-		for(double d: dist)
-		{
-			meandist += d;
-			if(d < mindist)
-			{
-				mindist = d;
-			}
-		}
-		meandist /= dist.length;
+//		double meandist = 0;
+//		for(double d: dist)
+//		{
+//			meandist += d;
+//			if(d < mindist)
+//			{
+//				mindist = d;
+//			}
+//		}
+//		meandist /= dist.length;
 		
 //		mindist += mean;
 		

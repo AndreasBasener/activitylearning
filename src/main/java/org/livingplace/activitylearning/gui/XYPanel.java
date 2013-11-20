@@ -37,7 +37,7 @@ public class XYPanel extends JPanel
 	private static final int offset = 50;
 	private static final int lineStroke = 2;
 	private static final int pointStroke = 4;
-	private static final int centroidStroke = 6;
+//	private static final int centroidStroke = 6;
 
 //	private int width;
 //	private int height;

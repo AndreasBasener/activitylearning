@@ -543,12 +543,12 @@ public class KDD {
 							sequence.add(new DoorBellEvent(data));
 						else if(str.equals("Door"))
 							sequence.add(new DoorEvent(data));
-//						if(str.equals("Ubisense"))
-//						{
-//							PositionData pd = new PositionData(data);
-//							sequence.add(pd);
-////							addDataPoint(new Point3D(pd.getX(), pd.getY(), 0));
-//						}
+						if(str.equals("Ubisense"))
+						{
+							PositionEvent pd = new PositionEvent(data);
+							sequence.add(pd);
+//							addDataPoint(new Point3D(pd.getX(), pd.getY(), 0));
+						}
 						else if(str.equals("Power"))
 							sequence.add(new PowerEvent(data));
 						else if(str.equals("Storage"))

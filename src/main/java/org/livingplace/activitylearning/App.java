@@ -128,7 +128,7 @@ public class App {
 //		writeResults("0Prozent_keinubi", kddlist0pro, map);
 //		writeResults("5Prozent_keinubi", kddlist5pro, map);
 //		writeResults("10Prozent_keinubi", kddlist10pro, map);
-		writeResults("20Prozent_keinubi", kddlist20pro, map);
+//		writeResults("20Prozent_keinubi", kddlist20pro, map);
 		
 //		gui.setPatternClusterList(kdd.getClusterList());
 

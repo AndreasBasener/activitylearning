@@ -97,7 +97,7 @@ public class Cluster {
 	
 	public boolean isSimilar(Cluster cluster)
 	{
-		double dist = centroid.distanceTo(cluster.getCentroid());
+//		double dist = centroid.distanceTo(cluster.getCentroid());
 //		System.out.println(dist);
 		if(this.centroid.distanceTo(cluster.getCentroid()) < Helper.MIN_DISTANCE_COMPRESS)
 			return true;

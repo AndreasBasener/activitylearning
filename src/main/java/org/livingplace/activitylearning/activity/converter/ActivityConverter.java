@@ -71,7 +71,6 @@ JsonDeserializer<Activity>{
 				{
 					PositionEvent event = (PositionEvent) d;
 					String fspace = event.getfSpace().getLabel().toString();
-					System.out.println(fspace);
 					if(!fspacearray.contains(fspace))
 					{
 						fspacearray.add(fspace);

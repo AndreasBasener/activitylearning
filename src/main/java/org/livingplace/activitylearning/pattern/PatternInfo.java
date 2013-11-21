@@ -3,6 +3,7 @@ package org.livingplace.activitylearning.pattern;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class PatternInfo {
 
 	private int numLabels;

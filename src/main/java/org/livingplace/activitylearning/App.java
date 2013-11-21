@@ -45,8 +45,8 @@ public class App {
 		gbuilder.setPrettyPrinting();
 		gson = gbuilder.create();
 		
-//		List<KDD> kddlist5pro = new ArrayList<KDD>();
-//		kddlist5pro.add(new KDD("data\\output_woche_005prozent_01.csv"));
+		List<KDD> kddlist5pro = new ArrayList<KDD>();
+		kddlist5pro.add(new KDD("data\\output_woche_005prozent_01.csv"));
 //		kddlist5pro.add(new KDD("data\\output_woche_005prozent_02.csv"));
 //		kddlist5pro.add(new KDD("data\\output_woche_005prozent_03.csv"));
 //		kddlist5pro.add(new KDD("data\\output_woche_005prozent_04.csv"));
@@ -71,8 +71,8 @@ public class App {
 //		kddlist10pro.add(new KDD("data\\output_woche_010prozent_10.csv"));
 		
 
-		List<KDD> kddlist20pro = new ArrayList<KDD>();
-		kddlist20pro.add(new KDD("data\\output_woche_020prozent_01.csv"));
+//		List<KDD> kddlist20pro = new ArrayList<KDD>();
+//		kddlist20pro.add(new KDD("data\\output_woche_020prozent_01.csv"));
 //		kddlist20pro.add(new KDD("data\\output_woche_020prozent_02.csv"));
 //		kddlist20pro.add(new KDD("data\\output_woche_020prozent_03.csv"));
 //		kddlist20pro.add(new KDD("data\\output_woche_020prozent_04.csv"));
@@ -119,14 +119,14 @@ public class App {
 //			k.dokdd();
 //		}
 		int index = 0;
-		for(KDD k: kddlist20pro)
+		for(KDD k: kddlist5pro)
 		{
 			k.dokdd();
 			writeActivities("data\\activities\\activity_" + index++ + ".act", k.getActivities());
 		}
 
-//		writeResults("0Prozent_keinubi", kddlist0pro, map);
-//		writeResults("5Prozent_keinubi", kddlist5pro, map);
+//		writeResults("0Prozent_alle", kddlist0pro, map);
+		writeResults("5Prozent_keinubi", kddlist5pro, map);
 //		writeResults("10Prozent_keinubi", kddlist10pro, map);
 //		writeResults("20Prozent_keinubi", kddlist20pro, map);
 		
@@ -176,6 +176,8 @@ public class App {
 						Pattern p = new Pattern(new Sequence(l, 0, null), 0);
 						double acurracy = bestmatch / l.size();
 	//					acu.add(acurracy);
+//						System.out.println(bestpc);
+//						System.out.println(p);
 						if(bestpc.containsPatternSequence(p))
 						{
 							writer.write("0;");

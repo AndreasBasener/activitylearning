@@ -122,6 +122,7 @@ public class Cluster {
 				patternList.add(p);
 			}
 		}
+		calcNewCentroid();
 	}
 	
 	public double bestMatch(List<IEvent> event)
@@ -130,10 +131,10 @@ public class Cluster {
 		for(int i = 0; i < patternList.size(); i++)
 		{
 //			match[i] = patternList.get(i).bestMatch(data);
-			match[i] =patternList.get(i).distanceTo(new Pattern(new Sequence(event, 0, null), 0));
+			match[i] = patternList.get(i).distanceTo(new Pattern(new Sequence(event, 0, null), 0));
 		}
 		
-		double bestmatch = Double.MAX_VALUE;
+		double bestmatch = Double.MAX_VALUE-1;
 		
 		for(double d: match)
 		{

@@ -2,12 +2,12 @@ ankleiden;0;
 abwaschen;0,500;
 toilette;0,250;
 essen;0;
-schlafenabends;0,229;
+schlafenabends;0,143;
 duschen;0,250;
-hinsetzen;1,000;
-arbeiten;0;
+hinsetzen;0;
+arbeiten;0,091;
 schlafenmorgends;0,053;
 kaffekochen;0;
 fernsehen;0;
 touchtisch;entfällt
-Cluster Anzahl;230;
+Cluster Anzahl;25;

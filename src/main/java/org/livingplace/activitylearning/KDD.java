@@ -386,7 +386,7 @@ public class KDD {
 		
 		System.out.println(workList.size() + " Pattern zum clustern übrig");
 		//Clusterbildung
-		int indexexex = 0;
+//		int indexexex = 0;
 		for (Pattern p: workList)
 		{
 //			System.out.println("Pattern Numero: " + indexexex++ + " - " + p);
@@ -568,7 +568,11 @@ public class KDD {
 						else if(str.equals("Door"))
 							sequence.add(new DoorEvent(data));
 						else if(str.equals("Ubisense"))
-							sequence.add(new PositionEvent(data));
+						{
+							PositionEvent event = new PositionEvent(data);
+							if(!event.getfSpace().getLabel().equals(FunctionalSpaceLabel.UNDEFINED))
+								sequence.add(event);
+						}
 						else if(str.equals("Power"))
 							sequence.add(new PowerEvent(data));
 						else if(str.equals("Storage"))
@@ -588,6 +592,35 @@ public class KDD {
 		}
 		
 		return sequence;
+	}
+	
+	public void checkEvents()
+	{
+		PositionEvent lastPositionEvent = null;
+		for(int i = 0; i < eventList.size(); i++)
+		{
+			IEvent e = eventList.get(i);
+			if (e instanceof PositionEvent)
+			{
+				PositionEvent posevent = (PositionEvent) e;
+				if(lastPositionEvent != null)
+				{
+					double timediff = posevent.getTime()-lastPositionEvent.getTime(); // [ms]
+					timediff /= 1000;                                                 // [s]
+					double eudist = posevent.euclidianDistance(lastPositionEvent);    // [m]
+					double speed = eudist / timediff;                                 // [m/s]
+					if(speed > Helper.MAX_HUMAN_SPEED)
+					{
+						eventList.remove(i);
+						System.out.println("PositionEvent entfernt");
+						continue;
+					}
+				}
+				
+				lastPositionEvent = posevent;
+			}
+		}
+			
 	}
 	
 	/**

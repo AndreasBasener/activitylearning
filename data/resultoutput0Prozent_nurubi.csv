@@ -1,13 +1,13 @@
 ankleiden;0,017;
-abwaschen;0,052;
+abwaschen;0;
 toilette;0;
-essen;0,082;
+essen;0,715;
 schlafenabends;entfällt
-duschen;0,018;
+duschen;0,063;
 hinsetzen;entfällt
-arbeiten;0,059;
+arbeiten;0,782;
 schlafenmorgends;entfällt
-kaffekochen;0,058;
+kaffekochen;0;
 fernsehen;0,012;
-touchtisch;0,047;
-Cluster Anzahl;363;
+touchtisch;0,121;
+Cluster Anzahl;12;

@@ -13,4 +13,9 @@ public class Helper {
 	
 	public static final double MAX_DIAGONAL = Math.sqrt(X*X + Y*Y);
 	
+	public static final double MAX_HUMAN_SPEED = 12.5; //[m/s]
+	
+	public static final String ACTIVEMQ_ADDRESS = "tcp://127.0.0.1:61616";
+	public static final String ACTIVEMQ_TOPICNAME = "activitiesTopic";
+	
 }

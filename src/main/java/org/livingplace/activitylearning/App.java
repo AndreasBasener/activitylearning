@@ -7,6 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.jms.JMSException;
+import javax.jms.Session;
+import javax.jms.TextMessage;
+import javax.jms.Topic;
+import javax.jms.TopicConnection;
+import javax.jms.TopicPublisher;
+import javax.jms.TopicSession;
+
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.livingplace.activitylearning.activity.*;
 import org.livingplace.activitylearning.activity.converter.*;
 import org.livingplace.activitylearning.event.*;
@@ -30,7 +39,7 @@ public class App {
 	
 	public static void main(String[] args) {
 		
-//		GUI gui = new GUI();
+		GUI gui = new GUI();
 		
 		GsonBuilder gbuilder = new GsonBuilder();
 		gbuilder.registerTypeAdapter(Activity.class, new ActivityConverter());
@@ -110,32 +119,38 @@ public class App {
 //		{
 //			k.dokdd();
 //		}
-//		for(KDD k: kddlist5pro)
-//		{
-//			k.dokdd();
-//		}
+		for(KDD k: kddlist5pro)
+		{
+			k.dokdd();
+		}
 //		for(KDD k: kddlist10pro)
 //		{
 //			k.dokdd();
 //		}
-		int index = 0;
-		for(KDD k: kddlist5pro)
-		{
-			k.dokdd();
-			writeActivities("data\\activities\\activity_" + index++ + ".act", k.getActivities());
-		}
+//		for(KDD k: kddlist20pro)
+//		{
+//			k.dokdd();
+//		}
 
-//		writeResults("0Prozent_alle", kddlist0pro, map);
-		writeResults("5Prozent_keinubi", kddlist5pro, map);
+//		for(KDD k: kddlist5pro)
+//		{
+////			k.checkEvents();
+//			k.dokdd();
+////			writeActivities("data\\activities\\activity_" + index++ + ".act", k.getActivities());
+////			sendActivities(Helper.ACTIVEMQ_TOPICNAME, Helper.ACTIVEMQ_ADDRESS, k.getActivities());
+//		}
+
+//		writeResults("0Prozent_keinubi", kddlist0pro, map);
+		writeResults("5Prozent_alle", kddlist5pro, map);
 //		writeResults("10Prozent_keinubi", kddlist10pro, map);
 //		writeResults("20Prozent_keinubi", kddlist20pro, map);
 		
-//		gui.setPatternClusterList(kdd.getClusterList());
+		gui.setPatternClusterList(kddlist5pro.get(0).getClusterList());
 
 		
-//		gui.repaint();
-//		gui.saveImage();
-//		System.out.println("Fertig");
+		gui.repaint();
+		gui.saveImage();
+		System.out.println("Fertig");
 	}
 	
 	/**
@@ -145,8 +160,9 @@ public class App {
 	 * @param list Liste der unterchiedlichen Versuche
 	 * @param map Map der vorgegebenen Szenarien
 	 */
-	private static void writeResults(String name, List<KDD> list, Map<String,List<IEvent>> map)
+	private static List<Cluster> writeResults(String name, List<KDD> list, Map<String,List<IEvent>> map)
 	{
+		List<Cluster> bestCluster = new ArrayList<Cluster>();
 		try {
 			FileWriter writer = new FileWriter("data\\resultoutput" + name + ".csv");
 		
@@ -186,6 +202,9 @@ public class App {
 						{
 							writer.write(String.format("%.3f", acurracy) +";");
 						}
+						
+						bestCluster.add(bestpc);
+						
 //						System.out.println(s + " best Cluster: " + bestpc.getClusterNumber() + " match: " + bestmatch + " size: " + l.size() + " acrruacy: " + acurracy*100 + "% " + bestpc.containsPatternSequence(p));
 			
 			//			System.out.println(bestpc);
@@ -215,6 +234,7 @@ public class App {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return bestCluster;
 	}
 	
 	private static void writeActivities(String filename, List<Activity> activities)
@@ -240,6 +260,46 @@ public class App {
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	private static void sendActivities(String topicName, String address, List<Activity> activities)
+	{
+		TopicConnection topicConnection;
+	    TopicSession topicSession;
+	    Topic topic;
+	    TopicPublisher publisher;
+	    ActiveMQConnectionFactory connectionFactory;
+		
+	    connectionFactory = new ActiveMQConnectionFactory(address);
+
+        try {
+            topicConnection = connectionFactory.createTopicConnection();
+            topicConnection.start();
+
+            topicSession = topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
+
+            topic = topicSession.createTopic(topicName);
+
+            publisher = topicSession.createPublisher(topic);
+
+            
+            for(Activity a: activities)
+            {
+            	TextMessage t = topicSession.createTextMessage(gson.toJson(a));
+                publisher.send(topic, t);
+            }
+            
+            publisher.close();
+            topicSession.close();
+            topicConnection.close();
+
+        } catch (JMSException ex) {
+
+            System.err.println("FATAL: \t|We can't connect to the ActiveMQ");
+            System.err.println("FATAL: \t|Printing Stack:\n");
+            ex.getStackTrace();
+        }
+	    
 	}
 	
 }

@@ -39,8 +39,10 @@ public class App {
 	
 	public static void main(String[] args) {
 		
+		//GUI zum Anzeigen der Aktivitäten auf dem Livingplace Grundriss
 		GUI gui = new GUI();
 		
+		//Zum serialieren der Aktivitäten als JSON Strings
 		GsonBuilder gbuilder = new GsonBuilder();
 		gbuilder.registerTypeAdapter(Activity.class, new ActivityConverter());
 		gbuilder.registerTypeAdapter(AlarmEvent.class, new AlarmConverter());
@@ -54,6 +56,7 @@ public class App {
 		gbuilder.setPrettyPrinting();
 		gson = gbuilder.create();
 		
+		//Datensets mit Fehlerrate 5%
 		List<KDD> kddlist5pro = new ArrayList<KDD>();
 		kddlist5pro.add(new KDD("data\\output_woche_005prozent_01.csv"));
 //		kddlist5pro.add(new KDD("data\\output_woche_005prozent_02.csv"));
@@ -66,7 +69,7 @@ public class App {
 //		kddlist5pro.add(new KDD("data\\output_woche_005prozent_09.csv"));
 //		kddlist5pro.add(new KDD("data\\output_woche_005prozent_10.csv"));
 //		
-//
+//		//Datensets mit Fehlerrate 10%
 //		List<KDD> kddlist10pro = new ArrayList<KDD>();
 //		kddlist10pro.add(new KDD("data\\output_woche_010prozent_01.csv"));
 //		kddlist10pro.add(new KDD("data\\output_woche_010prozent_02.csv"));
@@ -79,7 +82,7 @@ public class App {
 //		kddlist10pro.add(new KDD("data\\output_woche_010prozent_09.csv"));
 //		kddlist10pro.add(new KDD("data\\output_woche_010prozent_10.csv"));
 		
-
+//		//Datensets mit Fehlerrate 20%
 //		List<KDD> kddlist20pro = new ArrayList<KDD>();
 //		kddlist20pro.add(new KDD("data\\output_woche_020prozent_01.csv"));
 //		kddlist20pro.add(new KDD("data\\output_woche_020prozent_02.csv"));
@@ -92,11 +95,13 @@ public class App {
 //		kddlist20pro.add(new KDD("data\\output_woche_020prozent_09.csv"));
 //		kddlist20pro.add(new KDD("data\\output_woche_020prozent_10.csv"));
 		
+		//Datenset mit Fehlerrate 0%
 		List<KDD> kddlist0pro = new ArrayList<KDD>();
 		KDD kdd = new KDD("data\\output_woche_000prozent_01.csv");
 		kddlist0pro.add(kdd);
 //		KDD kdd = new KDD("C:\\workspacejuno\\scriptsimulator\\output.csv");
 		
+		//Map mit den gesuchten Aktivitätssequenzen
 		Map<String,List<IEvent>> map = new HashMap<String, List<IEvent>>();
 		
 		map.put("abwaschen",kdd.readFile("data\\activities\\abwaschen.csv"));
@@ -112,7 +117,7 @@ public class App {
 		map.put("toilette",kdd.readFile("data\\activities\\toilette.csv"));
 		map.put("touchtisch",kdd.readFile("data\\activities\\touchtisch.csv"));
 		
-		
+		//Aktivitätenentdeckung durchführen
 //		kdd.dokdd();
 
 //		for(KDD k: kddlist0pro)
@@ -140,16 +145,17 @@ public class App {
 ////			sendActivities(Helper.ACTIVEMQ_TOPICNAME, Helper.ACTIVEMQ_ADDRESS, k.getActivities());
 //		}
 
+		//Ergebnisse in Datei als CSV speichern
 //		writeResults("0Prozent_keinubi", kddlist0pro, map);
 		writeResults("5Prozent_alle", kddlist5pro, map);
 //		writeResults("10Prozent_keinubi", kddlist10pro, map);
 //		writeResults("20Prozent_keinubi", kddlist20pro, map);
 		
+		//Aktivitäten anzeigen
 		gui.setPatternClusterList(kddlist5pro.get(0).getClusterList());
-
-		
 		gui.repaint();
 		gui.saveImage();
+		
 		System.out.println("Fertig");
 	}
 	
